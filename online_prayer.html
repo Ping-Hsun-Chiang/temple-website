@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>線上祈福 — 六興堂</title>
+<meta name="description" content="六興堂線上祈福服務，無法親臨本宮？由廟方代為祈福誦經，神明庇佑同在。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C; --gold-light: #E8D48B; --gold-dark: #A07C28;
+  --red: #8B1A1A; --red-light: #B22222; --red-deep: #5C0A0A;
+  --bg-dark: #1A0A0A; --bg-section: #140808; --bg-card: #1E0E0E;
+  --text-primary: #F5E6C8; --text-secondary: #C4A882; --text-muted: #8B7355;
+  --font-display: 'Noto Serif TC', serif; --font-body: 'Noto Sans TC', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--bg-dark); color: var(--text-primary); line-height: 1.8; min-height: 100vh; }
+a { color: var(--gold); text-decoration: none; transition: color 0.3s; }
+a:hover { color: var(--gold-light); }
+
+.top-bar { background: rgba(26,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.top-bar-logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--gold); letter-spacing: 0.1em; }
+.top-bar-back { font-size: 0.9rem; color: var(--text-secondary); }
+.top-bar-back:hover { color: var(--gold); }
+
+.page-hero { text-align: center; padding: 60px 24px 40px; background: linear-gradient(to bottom, rgba(201,168,76,0.05), transparent); }
+.page-hero-icon { font-size: 3rem; margin-bottom: 16px; }
+.page-hero h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 12px; }
+.page-hero p { color: var(--text-secondary); max-width: 500px; margin: 0 auto; font-size: 0.95rem; }
+.page-hero-line { width: 60px; height: 2px; background: var(--gold); margin: 20px auto 0; }
+
+.form-container { max-width: 650px; margin: 0 auto; padding: 40px 24px 80px; }
+
+/* 祈福類型選擇 */
+.prayer-types { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 36px; }
+@media (max-width: 500px) { .prayer-types { grid-template-columns: 1fr; } }
+.prayer-type {
+  background: var(--bg-card); border: 2px solid rgba(201,168,76,0.1); border-radius: 12px;
+  padding: 24px 20px; text-align: center; cursor: pointer; transition: all 0.3s;
+}
+.prayer-type:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-2px); }
+.prayer-type.selected { border-color: var(--gold); background: rgba(201,168,76,0.06); }
+.prayer-type-icon { font-size: 1.8rem; margin-bottom: 8px; }
+.prayer-type h3 { font-family: var(--font-display); font-size: 1rem; color: var(--gold); margin-bottom: 4px; }
+.prayer-type p { font-size: 0.8rem; color: var(--text-muted); }
+.prayer-type .check-mark { display: none; color: var(--gold); margin-top: 6px; font-size: 0.85rem; }
+.prayer-type.selected .check-mark { display: block; }
+
+.form-group { margin-bottom: 24px; }
+.form-group label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500; }
+.form-group label .required { color: var(--red-light); margin-left: 4px; }
+.form-input {
+  width: 100%; padding: 14px 16px; background: var(--bg-card);
+  border: 1px solid rgba(201,168,76,0.15); border-radius: 8px;
+  color: var(--text-primary); font-family: var(--font-body); font-size: 0.95rem;
+  transition: border-color 0.3s; outline: none;
+}
+.form-input:focus { border-color: var(--gold); box-shadow: 0 0 12px rgba(201,168,76,0.1); }
+.form-input::placeholder { color: var(--text-muted); }
+textarea.form-input { resize: vertical; min-height: 120px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+
+.section-title-sm { font-family: var(--font-display); font-size: 1.1rem; color: var(--gold); margin: 36px 0 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(201,168,76,0.1); }
+
+.notice-box {
+  background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.12);
+  border-radius: 10px; padding: 20px 24px; margin-top: 24px;
+  font-size: 0.85rem; color: var(--text-secondary); line-height: 1.9;
+}
+.notice-box strong { color: var(--gold); display: block; margin-bottom: 6px; }
+
+.btn-next {
+  display: block; width: 100%; padding: 16px; margin-top: 36px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  border: none; border-radius: 8px; color: var(--bg-dark);
+  font-family: var(--font-body); font-size: 1rem; font-weight: 600;
+  cursor: pointer; letter-spacing: 0.1em; transition: all 0.3s;
+}
+.btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.25); }
+
+/* 完成畫面 */
+.complete-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: var(--bg-dark); flex-direction: column;
+  align-items: center; justify-content: center; text-align: center; padding: 24px;
+}
+.complete-overlay.show { display: flex; }
+.complete-overlay .icon { font-size: 4rem; margin-bottom: 20px; }
+.complete-overlay h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--gold); margin-bottom: 16px; }
+.complete-overlay p { color: var(--text-secondary); max-width: 420px; line-height: 1.9; margin-bottom: 32px; }
+.complete-overlay a {
+  display: inline-block; padding: 14px 40px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  border-radius: 8px; color: var(--bg-dark); font-weight: 600; letter-spacing: 0.1em;
+}
+
+.page-footer { text-align: center; padding: 32px 24px; border-top: 1px solid rgba(201,168,76,0.08); font-size: 0.8rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html" class="top-bar-logo">下營庄 六興堂</a>
+  <a href="index.html#services" class="top-bar-back">← 返回主頁</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-icon">🙏</div>
+  <h1>線上祈福</h1>
+  <p>無法親臨本宮？填寫祈福表單，由廟方代為祈福誦經，神明庇佑同在。</p>
+  <div class="page-hero-line"></div>
+</div>
+
+<div class="form-container">
+
+  <!-- 祈福類型 -->
+  <h3 class="section-title-sm">選擇祈福項目</h3>
+  <div class="prayer-types">
+    <!-- ★ 修改祈福項目 -->
+    <div class="prayer-type" data-type="平安祈福">
+      <div class="prayer-type-icon">🕊️</div>
+      <h3>平安祈福</h3>
+      <p>消災解厄、闔家平安</p>
+      <div class="check-mark">✓ 已選擇</div>
+    </div>
+    <div class="prayer-type" data-type="健康祈福">
+      <div class="prayer-type-icon">💚</div>
+      <h3>健康祈福</h3>
+      <p>身體康健、疾病痊癒</p>
+      <div class="check-mark">✓ 已選擇</div>
+    </div>
+    <div class="prayer-type" data-type="事業學業">
+      <div class="prayer-type-icon">📈</div>
+      <h3>事業學業</h3>
+      <p>金榜題名、事業亨通</p>
+      <div class="check-mark">✓ 已選擇</div>
+    </div>
+    <div class="prayer-type" data-type="姻緣感情">
+      <div class="prayer-type-icon">💕</div>
+      <h3>姻緣感情</h3>
+      <p>良緣早結、感情圓滿</p>
+      <div class="check-mark">✓ 已選擇</div>
+    </div>
+  </div>
+
+  <!-- 個人資料 -->
+  <h3 class="section-title-sm">填寫個人資料</h3>
+  <div class="form-row">
+    <div class="form-group">
+      <label>姓名 <span class="required">*</span></label>
+      <input type="text" class="form-input" id="name" placeholder="請輸入姓名">
+    </div>
+    <div class="form-group">
+      <label>農曆生日</label>
+      <input type="text" class="form-input" id="birthday" placeholder="例：民國 80 年 3 月 15 日">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label>聯絡電話 <span class="required">*</span></label>
+      <input type="tel" class="form-input" id="phone" placeholder="09XX-XXX-XXX">
+    </div>
+    <div class="form-group">
+      <label>地址</label>
+      <input type="text" class="form-input" id="address" placeholder="選填">
+    </div>
+  </div>
+
+  <!-- 祈願內容 -->
+  <h3 class="section-title-sm">祈願內容</h3>
+  <div class="form-group">
+    <textarea class="form-input" id="wish" placeholder="請詳述祈願內容，例如：希望家人身體健康、出入平安...&#10;廟方將代為在神前誦經祈福。"></textarea>
+  </div>
+
+  <div class="notice-box">
+    <strong>📋 注意事項</strong>
+    ① 表單送出後，廟方將於三個工作日內安排代為祈福。<br>
+    ② 祈福完成後將透過電話或 LINE 通知。<br>
+    ③ 若有特殊需求，歡迎直接聯繫廟方。
+  </div>
+
+  <button class="btn-next" id="submitBtn">送出祈福表單 🙏</button>
+</div>
+
+<!-- 完成畫面 -->
+<div class="complete-overlay" id="completePage">
+  <div class="icon">🙏</div>
+  <h2>祈福表單已送出</h2>
+  <p>感謝您的虔誠祈願。<br>廟方將盡速為您安排祈福，願神明庇佑、心想事成。</p>
+  <a href="index.html">返回主頁</a>
+</div>
+
+<div class="page-footer">© 2026 六興堂 版權所有</div>
+
+<script>
+// 祈福類型選擇（可多選）
+document.querySelectorAll('.prayer-type').forEach(t => {
+  t.addEventListener('click', () => t.classList.toggle('selected'));
+});
+
+// 送出
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const name = document.getElementById('name').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const selected = document.querySelectorAll('.prayer-type.selected');
+  if (selected.length === 0) { alert('請至少選擇一項祈福項目'); return; }
+  if (!name || !phone) { alert('請填寫姓名與聯絡電話'); return; }
+  document.getElementById('completePage').classList.add('show');
+  window.scrollTo({ top: 0 });
+});
+</script>
+</body>
+</html>
