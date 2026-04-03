@@ -822,7 +822,7 @@ document.getElementById('toStep3').addEventListener('click', () => {
   goToStep(3);
 });
 document.getElementById('backTo2').addEventListener('click', () => goToStep(2));
-const API_URL = "https://script.google.com/macros/s/AKfycbxdy1R3p5mce1fs8Z4SGl34D8lwuXwcMlr8h5lc2ne3awWt0J6cmrjXTZ77SmIXR15f/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyPl1BmSSBAEnTfo3fNRKDrWN-txODxZiRgH07JhDpe9lBZUy9IzxgQ6Wi5CKngua0s/exec";
 
 document.getElementById('toStep4').addEventListener('click', async () => {
   const btn = document.getElementById('toStep4');
@@ -847,7 +847,7 @@ document.getElementById('toStep4').addEventListener('click', async () => {
     await fetch(API_URL, {
       method: 'POST',
       mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(formData)
     });
     goToStep(4);
