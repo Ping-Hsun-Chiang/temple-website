@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>○○宮（請替換寺廟名稱）</title>
-<meta name="description" content="歡迎蒞臨○○宮，主祀○○聖母，香火鼎盛、神靈顯赫。">
+<title>六興堂</title>
+<meta name="description" content="歡迎蒞臨 臺南市下營區 過港寮六興堂，主祀玄天六上帝，香火鼎盛、神靈顯赫。">
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -152,8 +152,31 @@ img { max-width: 100%; height: auto; }
 }
 .gate-wrapper.open .gate-inner-glow { opacity: 1; }
 
-/* 門聯文字 */
-.gate-text-left, .gate-text-right {
+/* 橫批（門額）— 移入紅色門板內 */
+.gate-text-top {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--gold);
+  letter-spacing: 0.5em;
+  text-shadow: 0 0 10px rgba(201,168,76,0.3);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 2;
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  transition: opacity 0.5s ease;
+}
+
+.gate-wrapper.open .gate-text-top {
+  opacity: 0;
+}
+
+/* 門上的對聯共用樣式 */
+.gate-text-vertical {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -163,11 +186,20 @@ img { max-width: 100%; height: auto; }
   color: var(--gold);
   letter-spacing: 0.5em;
   text-shadow: 0 0 10px rgba(201,168,76,0.3);
+  white-space: nowrap;
   pointer-events: none;
   z-index: 2;
 }
-.gate-text-left { left: 30px; }
-.gate-text-right { right: 30px; }
+
+/* 左聯 */
+.gate-left .gate-text-vertical {
+  left: 10px;
+}
+
+/* 右聯 */
+.gate-right .gate-text-vertical {
+  right: 10px;
+}
 
 .intro-temple-name {
   font-family: var(--font-display);
@@ -458,10 +490,31 @@ img { max-width: 100%; height: auto; }
   margin-bottom: 24px;
 }
 
-/* ============================
-   神明介紹
-   ============================ */
+/* ============================ 神明介紹 ============================ */
 #deities { background: var(--bg-section); }
+
+.deity-group {
+  margin-bottom: 56px; /* 上下排之間的間距 */
+}
+.deity-group:last-child {
+  margin-bottom: 0;
+}
+.deity-group-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+  padding-left: 16px;
+  border-left: 4px solid var(--gold);
+  letter-spacing: 0.1em;
+}
+
+/* 以下為你原本的 .deity-cards 樣式，保持不變 */
+.deity-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+}
 .deity-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -818,30 +871,31 @@ footer {
 </head>
 <body>
 
-<!-- ===========================
-     進場動畫（廟門開啟）
-     =========================== -->
+<!-- =========================== 進場動畫 =========================== -->
 <div id="intro-overlay">
   <div class="intro-smoke"></div>
-  <p class="intro-temple-name">○○宮</p>
+  <p class="intro-temple-name">台南市下營區 六興堂</p>
   <div class="gate-wrapper" id="gate">
     <div class="gate-inner-glow"></div>
-    <div class="gate-left"></div>
-    <div class="gate-right"></div>
-    <!-- ★ 替換為實際門聯 -->
-    <span class="gate-text-left">神恩廣佈</span>
-    <span class="gate-text-right">德澤長流</span>
+    
+    <span class="gate-text-top">玄冥斗宿天下威尊六上帝</span>
+    
+    <div class="gate-left">
+      <span class="gate-text-vertical">天界分靈住鎮北方護庶民</span>
+    </div>
+    
+    <div class="gate-right">
+      <span class="gate-text-vertical">玄機廟興手持星劍騰威武</span>
+    </div>
   </div>
   <p class="intro-hint">— 點擊開啟廟門 —</p>
 </div>
 
-<!-- ===========================
-     導航列
-     =========================== -->
+<!-- ===========================導航列=========================== -->
 <div class="ornament-top"></div>
 <nav id="navbar">
   <div class="nav-inner">
-    <div class="nav-logo">○○宮</div>
+    <div class="nav-logo">臺南市下營區 六興堂</div>
     <button class="nav-toggle" id="navToggle" aria-label="選單">
       <span></span><span></span><span></span>
     </button>
@@ -865,11 +919,11 @@ footer {
   <div class="hero-content">
     <p class="hero-sub">香火鼎盛 ‧ 神靈顯赫</p>
     <!-- ★ 替換為寺廟名稱 -->
-    <h1 class="hero-title">○○宮</h1>
+    <h1 class="hero-title">六興堂</h1>
     <div class="hero-divider"></div>
     <p class="hero-desc">
       <!-- ★ 替換為寺廟簡短介紹 -->
-      本宮奉祀○○聖母，創建於民國○○年，數十年來護佑鄉里、香火綿延，為地方信仰中心。
+      本宮奉祀玄天六上帝，創建於民國○○年，數十年來護佑鄉里、香火綿延，為地方信仰中心。
     </p>
   </div>
 </section>
@@ -885,17 +939,15 @@ footer {
   </div>
   <div class="about-grid reveal">
     <div class="about-image">
-      <!-- ★ 替換為寺廟歷史照片 -->
       <img src="https://placehold.co/800x600/1E0E0E/C9A84C?text=寺廟歷史照片" alt="宮廟沿革">
     </div>
     <div class="about-text">
       <p class="highlight">「守護鄉里，傳承信仰」</p>
       <p>
-        <!-- ★ 替換為實際沿革內容 -->
-        ○○宮創建於民國○○年，初為地方信眾自發搭建之小祠。隨著信眾日增、香火日盛，歷經數次擴建與整修，始有今日之規模。
+        六興堂創建於民國○○年，初為地方信眾自發搭建之小祠。隨著信眾日增、香火日盛，歷經數次擴建與整修，始有今日之規模。
       </p>
       <p>
-        本宮供奉○○聖母為主神，配祀○○帝君、○○菩薩等神尊，長年庇佑地方百姓平安順遂，為社區重要之信仰與文化中心。
+        本宮供奉玄天六上帝、康照二元帥為主神，配祀觀音佛祖、觀音二佛祖、軍師伍關大地與黑虎大將軍等神尊，長年庇佑地方百姓平安順遂，為社區重要之信仰與文化中心。
       </p>
       <p>
         民國○○年完成最近一次大規模整建，殿宇巍峨、雕樑畫棟，融合傳統閩南建築之美，吸引各方信眾與遊客前來參拜。
@@ -904,9 +956,7 @@ footer {
   </div>
 </section>
 
-<!-- ===========================
-     神明介紹
-     =========================== -->
+<!-- =========================== 神明介紹 =========================== -->
 <section id="deities">
   <div class="section" style="padding-bottom: 100px;">
     <div class="section-header reveal">
@@ -914,42 +964,72 @@ footer {
       <h2 class="section-title">神明介紹</h2>
       <div class="section-line"></div>
     </div>
-    <div class="deity-cards reveal">
-      <!-- ★ 神明卡片：複製修改以增減 -->
-      <div class="deity-card">
-        <div class="deity-card-img">
-          <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=主祀神明" alt="主祀神明">
-        </div>
-        <div class="deity-card-body">
-          <h3>○○聖母</h3>
-          <p class="deity-title">主祀神明</p>
-          <p>○○聖母慈悲為懷，庇佑蒼生。信眾每遇困難，虔誠祈求無不靈驗，為本宮最受崇敬之神尊。</p>
-        </div>
-      </div>
 
-      <div class="deity-card">
-        <div class="deity-card-img">
-          <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=配祀神明" alt="配祀神明">
+    <div class="deity-group reveal">
+      <h3 class="deity-group-title">主祀神明</h3>
+      <div class="deity-cards">
+        <div class="deity-card">
+          <div class="deity-card-img">
+            <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=主祀神明" alt="玄天六上帝">
+          </div>
+          <div class="deity-card-body">
+            <h3>玄天六上帝</h3>
+            <p class="deity-title">主祀神明</p>
+            <p>玄天六上帝"介紹...。</p>
+          </div>
         </div>
-        <div class="deity-card-body">
-          <h3>○○帝君</h3>
-          <p class="deity-title">配祀神明</p>
-          <p>○○帝君威靈顯赫，護國佑民，掌管○○，為信眾祈求事業、學業之守護神。</p>
-        </div>
-      </div>
 
-      <div class="deity-card">
-        <div class="deity-card-img">
-          <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=配祀神明" alt="配祀神明">
-        </div>
-        <div class="deity-card-body">
-          <h3>○○菩薩</h3>
-          <p class="deity-title">配祀神明</p>
-          <p>○○菩薩大慈大悲，聞聲救苦，為信眾祈求平安健康之重要神尊。</p>
+        <div class="deity-card">
+          <div class="deity-card-img">
+            <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=主祀神明" alt="康照二元帥">
+          </div>
+          <div class="deity-card-body">
+            <h3>康照二元帥</h3>
+            <p class="deity-title">主祀神明</p>
+            <p>康照二元帥"介紹..."。</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <div class="deity-group reveal">
+      <h3 class="deity-group-title">配祀神明</h3>
+      <div class="deity-cards">
+        <div class="deity-card">
+          <div class="deity-card-img">
+            <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=配祀神明" alt="觀音佛祖">
+          </div>
+          <div class="deity-card-body">
+            <h3>觀音佛祖</h3>
+            <p class="deity-title">配祀神明</p>
+            <p>觀音佛祖"介紹..."</p>
+          </div>
+        </div>
+
+        <div class="deity-card">
+          <div class="deity-card-img">
+            <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=配祀神明" alt="觀音二佛祖">
+          </div>
+          <div class="deity-card-body">
+            <h3>觀音二佛祖</h3>
+            <p class="deity-title">配祀神明</p>
+            <p>觀音二佛祖"介紹..."</p>
+          </div>
+        </div>
+
+        <div class="deity-card">
+          <div class="deity-card-img">
+            <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=配祀神明" alt="黑虎大將軍">
+          </div>
+          <div class="deity-card-body">
+            <h3>黑虎大將軍</h3>
+            <p class="deity-title">配祀神明</p>
+            <p>黑虎大將軍"介紹..."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
 </section>
 
 <!-- ===========================
@@ -969,8 +1049,8 @@ footer {
         <span class="day">23</span>
       </div>
       <div class="event-info">
-        <h3>○○聖母聖誕千秋慶典</h3>
-        <p>恭祝○○聖母聖誕千秋，本宮舉辦祝壽法會、祈安禮斗，歡迎十方善信大德蒞臨參拜。</p>
+        <h3>玄天六上帝聖誕千秋慶典</h3>
+        <p>恭祝玄天六上帝聖誕千秋，本宮舉辦祝壽法會、祈安禮斗，歡迎十方善信大德蒞臨參拜。</p>
         <span class="event-tag">年度大典</span>
       </div>
     </div>
@@ -1067,9 +1147,7 @@ footer {
   </div>
 </section>
 
-<!-- ===========================
-     交通與聯絡
-     =========================== -->
+<!-- =========================== 交通與聯絡 =========================== -->
 <section id="contact">
   <div class="section">
     <div class="section-header reveal">
@@ -1084,65 +1162,41 @@ footer {
             <div class="contact-icon">📍</div>
             <div class="contact-detail">
               <h4>宮廟地址</h4>
-              <!-- ★ 替換為實際地址 -->
-              <p>○○縣○○鄉○○路○○號</p>
+              <p>臺南市下營區東興一街125巷5號</p>
             </div>
           </li>
           <li>
             <div class="contact-icon">📞</div>
             <div class="contact-detail">
               <h4>聯絡電話</h4>
-              <!-- ★ 替換為實際電話 -->
-              <p>（0○）○○○-○○○○</p>
+              <p>(06) 667-9086 (待查證)</p>
             </div>
           </li>
           <li>
             <div class="contact-icon">🕐</div>
             <div class="contact-detail">
               <h4>開放時間</h4>
-              <!-- ★ 替換為實際時間 -->
               <p>每日 06:00 – 21:00<br>全年無休</p>
-            </div>
-          </li>
-          <li>
-            <div class="contact-icon">🚗</div>
-            <div class="contact-detail">
-              <h4>交通方式</h4>
-              <!-- ★ 替換為實際交通資訊 -->
-              <p>
-                自行開車：國道○號○○交流道下，沿○○路直行約○分鐘。<br>
-                大眾運輸：搭乘○○客運至○○站下車，步行約○分鐘。
-              </p>
             </div>
           </li>
         </ul>
       </div>
       <div class="map-embed">
-        <!-- ★ 替換為 Google Maps 嵌入碼：
-             到 Google Maps 找到寺廟 → 分享 → 嵌入地圖 → 複製 iframe -->
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3635.123!2d121.0!3d23.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDMwJzAwLjAiTiAxMjHCsDAwJzAwLjAiRQ!5e0!3m2!1szh-TW!2stw!4v1234567890"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14664.568418884066!2d120.25309435325583!3d23.23791540474027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346e8744557d73e1%3A0x3fd154b096e33e2e!2z5LiL54ef6YGO5riv5a-u5YWt6IiI5aCC!5e0!3m2!1szh-TW!2stw!4v1775237204100!5m2!1szh-TW!2stw" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===========================
-     Footer
-     =========================== -->
+<!-- ===========================Footer=========================== -->
 <footer>
-  <p class="footer-name">○○宮</p>
+  <p class="footer-name">六興堂</p>
   <div class="footer-socials">
-    <!-- ★ 替換為實際社群連結 -->
-    <a href="#" aria-label="Facebook">📘</a>
-    <a href="#" aria-label="Instagram">📷</a>
-    <a href="#" aria-label="LINE">💬</a>
+    <a href="https://www.facebook.com/p/%E4%B8%8B%E7%87%9F%E5%BA%84%E5%85%AD%E8%88%88%E5%A0%82-100063722178884/?locale=zh_TW" target="_blank" rel="noopener noreferrer" aria-label="Facebook">FB</a>
+    
+    <a href="https://www.instagram.com/liu_xing_tang__" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
   </div>
-  <p class="footer-copy">© 2026 ○○宮 版權所有 ｜ 網站設計與維護</p>
+  <p class="footer-copy">© 2026 六興堂 版權所有 | 網站設計與維護</p>
 </footer>
 
 <!-- 回到頂部 -->
