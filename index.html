@@ -9,7 +9,7 @@
 <!-- ★ Open Graph 標籤 — 控制 LINE / FB 分享時的預覽內容 -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="臺南市下營區 六興堂">
-<meta property="og:description" content="歡迎蒞臨過港寮六興堂，主祀玄天六上帝，香火鼎盛、神靈顯赫，為地方信仰中心。">
+<meta property="og:description" content="歡迎蒞臨下營庄－過港寮六興堂，主祀玄天六上帝，香火鼎盛、神靈顯赫，為地方信仰中心。">
 <!-- ★ og:image 請替換為寺廟實際照片的完整網址（建議 1200x630 px） -->
 <meta property="og:image" content="https://ping-hsun-chiang.github.io/temple-website/images/og-cover.jpg">
 <meta property="og:url" content="https://ping-hsun-chiang.github.io/temple-website/">
@@ -17,7 +17,7 @@
 
 <!-- ★ LINE 專用（LINE 優先讀取這些） -->
 <meta name="line:title" content="臺南市下營區 六興堂">
-<meta name="line:description" content="歡迎蒞臨過港寮六興堂，主祀玄天六上帝，香火鼎盛、神靈顯赫。">
+<meta name="line:description" content="歡迎蒞臨下營庄－過港寮六興堂，主祀玄天六上帝，香火鼎盛、神靈顯赫。">
 
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,238 +62,12 @@ a:hover { color: var(--gold-light); }
 img { max-width: 100%; height: auto; }
 
 /* ============================
-   進場動畫 — 廟門開啟效果
+   頂部裝飾邊框
    ============================ */
-#intro-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-dark);
-  cursor: pointer;
-  transition: opacity 0.8s ease;
-}
-#intro-overlay.fade-out {
-  opacity: 0;
-  pointer-events: none;
-}
-.intro-smoke {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 80%, rgba(201,168,76,0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 30% 50%, rgba(139,26,26,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 40%, rgba(201,168,76,0.04) 0%, transparent 50%);
-  animation: smokeFloat 6s ease-in-out infinite alternate;
-}
-@keyframes smokeFloat {
-  0% { transform: translateY(0) scale(1); opacity: 0.6; }
-  100% { transform: translateY(-20px) scale(1.05); opacity: 1; }
-}
-
-/* 廟門 */
-.gate-wrapper {
-  position: relative;
-  width: 320px;
-  height: 420px;
-  perspective: 800px;
-}
-.gate-left, .gate-right {
-  position: absolute;
-  top: 0;
-  width: 50%;
-  height: 100%;
-  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-  transform-origin: left center;
-  backface-visibility: hidden;
-}
-.gate-left {
-  left: 0;
-  transform-origin: left center;
-  background: linear-gradient(135deg, var(--red-deep) 0%, var(--red) 50%, var(--red-deep) 100%);
-  border-right: 2px solid var(--gold-dark);
-  border-radius: 8px 0 0 8px;
-}
-.gate-right {
-  right: 0;
-  transform-origin: right center;
-  background: linear-gradient(225deg, var(--red-deep) 0%, var(--red) 50%, var(--red-deep) 100%);
-  border-left: 2px solid var(--gold-dark);
-  border-radius: 0 8px 8px 0;
-}
-.gate-left::after, .gate-right::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--gold-light) 30%, var(--gold-dark) 100%);
-  box-shadow: 0 0 15px rgba(201,168,76,0.4);
-}
-.gate-left::after { right: 14px; }
-.gate-right::after { left: 14px; }
-
-/* 門上的裝飾紋路 */
-.gate-left::before, .gate-right::before {
-  content: '';
-  position: absolute;
-  top: 20px;
-  bottom: 20px;
-  width: calc(100% - 30px);
-  border: 1px solid rgba(201,168,76,0.25);
-  border-radius: 4px;
-}
-.gate-left::before { left: 10px; }
-.gate-right::before { right: 10px; }
-
-.gate-wrapper.open .gate-left { transform: rotateY(-110deg); }
-.gate-wrapper.open .gate-right { transform: rotateY(110deg); }
-
-/* 門內的光 */
-.gate-inner-glow {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at center, rgba(201,168,76,0.15) 0%, transparent 70%);
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 1s ease 0.3s;
-}
-.gate-wrapper.open .gate-inner-glow { opacity: 1; }
-
-/* 橫批（門額）— 移入紅色門板內 */
-.gate-text-top {
-  position: absolute;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: var(--gold);
-  letter-spacing: 0.5em;
-  text-shadow: 0 0 10px rgba(201,168,76,0.3);
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 2;
-  direction: rtl;
-  unicode-bidi: bidi-override;
-  transition: opacity 0.5s ease;
-}
-
-.gate-wrapper.open .gate-text-top {
-  opacity: 0;
-}
-
-/* 門上的對聯共用樣式 */
-.gate-text-vertical {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  writing-mode: vertical-rl;
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  color: var(--gold);
-  letter-spacing: 0.5em;
-  text-shadow: 0 0 10px rgba(201,168,76,0.3);
-  white-space: nowrap;
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* 左聯 */
-.gate-left .gate-text-vertical {
-  left: 10px;
-}
-
-/* 右聯 */
-.gate-right .gate-text-vertical {
-  right: 10px;
-}
-
-.intro-temple-name {
-  font-family: var(--font-display);
-  font-size: 2.8rem;
-  font-weight: 900;
-  color: var(--gold);
-  text-shadow: 0 0 30px rgba(201,168,76,0.3), 0 2px 4px rgba(0,0,0,0.5);
-  margin-bottom: 32px;
-  letter-spacing: 0.3em;
-  opacity: 0;
-  animation: fadeInUp 1.2s ease 0.3s forwards;
-}
-.intro-hint {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  margin-top: 24px;
-  opacity: 0;
-  animation: fadeInUp 1s ease 1s forwards, pulse 2s ease-in-out 2s infinite;
-}
 
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
-}
-@keyframes pulse {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
-}
-
-/* ============================
-   頂部裝飾邊框
-   ============================ */
-
-/* ============================
-   手機版進場動畫適配
-   ============================ */
-@media (max-width: 768px) {
-  .intro-temple-name {
-    font-size: 1.6rem;
-    letter-spacing: 0.15em;
-    margin-bottom: 20px;
-    padding: 0 16px;
-  }
-  .gate-wrapper {
-    width: 260px;
-    height: 360px;
-  }
-  .gate-text-top {
-    font-size: 0.75rem;
-    letter-spacing: 0.3em;
-    top: 12px;
-  }
-  .gate-text-vertical {
-    font-size: 0.85rem;
-    letter-spacing: 0.3em;
-  }
-  .intro-hint {
-    font-size: 0.8rem;
-    margin-top: 18px;
-  }
-}
-
-@media (max-width: 400px) {
-  .intro-temple-name {
-    font-size: 1.3rem;
-    letter-spacing: 0.1em;
-    margin-bottom: 16px;
-  }
-  .gate-wrapper {
-    width: 220px;
-    height: 300px;
-  }
-  .gate-text-top {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-  }
-  .gate-text-vertical {
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-  }
 }
 .ornament-top {
   height: 6px;
@@ -320,10 +94,8 @@ img { max-width: 100%; height: auto; }
   background: rgba(26,10,10,0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(201,168,76,0.15);
-  transform: translateY(-100%);
   transition: transform 0.5s ease;
 }
-#navbar.visible { transform: translateY(0); }
 
 .nav-inner {
   max-width: 1200px;
@@ -776,9 +548,7 @@ img { max-width: 100%; height: auto; }
   color: var(--bg-dark);
 }
 
-/* ============================
-   交通資訊
-   ============================ */
+/* ============================ 交通資訊 ============================ */
 #contact { background: var(--bg-section); }
 .contact-grid {
   display: grid;
@@ -929,26 +699,6 @@ footer {
 </style>
 </head>
 <body>
-
-<!-- =========================== 進場動畫 =========================== -->
-<div id="intro-overlay">
-  <div class="intro-smoke"></div>
-  <p class="intro-temple-name">台南市下營區 六興堂</p>
-  <div class="gate-wrapper" id="gate">
-    <div class="gate-inner-glow"></div>
-    
-    <span class="gate-text-top">玄冥斗宿天下威尊六上帝</span>
-    
-    <div class="gate-left">
-      <span class="gate-text-vertical">天界分靈住鎮北方護庶民</span>
-    </div>
-    
-    <div class="gate-right">
-      <span class="gate-text-vertical">玄機廟興手持星劍騰威武</span>
-    </div>
-  </div>
-  <p class="intro-hint">— 點擊開啟廟門 —</p>
-</div>
 
 <!-- ===========================導航列=========================== -->
 <div class="ornament-top"></div>
@@ -1245,24 +995,6 @@ footer {
      JavaScript
      =========================== -->
 <script>
-// ---- 進場動畫 ----
-const overlay = document.getElementById('intro-overlay');
-const gate = document.getElementById('gate');
-let introClicked = false;
-
-overlay.addEventListener('click', () => {
-  if (introClicked) return;
-  introClicked = true;
-  gate.classList.add('open');
-  setTimeout(() => {
-    overlay.classList.add('fade-out');
-    document.getElementById('navbar').classList.add('visible');
-  }, 900);
-  setTimeout(() => {
-    overlay.style.display = 'none';
-  }, 1800);
-});
-
 // ---- 導航列手機選單 ----
 document.getElementById('navToggle').addEventListener('click', () => {
   document.getElementById('navLinks').classList.toggle('open');
