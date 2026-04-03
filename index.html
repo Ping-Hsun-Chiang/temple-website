@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>○○宮（請替換寺廟名稱）</title>
+<meta name="description" content="歡迎蒞臨○○宮，主祀○○聖母，香火鼎盛、神靈顯赫。">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================
+   CSS 變數 — 修改這裡可快速換色
+   ============================ */
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8D48B;
+  --gold-dark: #A07C28;
+  --red: #8B1A1A;
+  --red-light: #B22222;
+  --red-deep: #5C0A0A;
+  --bg-dark: #1A0A0A;
+  --bg-section: #140808;
+  --bg-card: #1E0E0E;
+  --text-primary: #F5E6C8;
+  --text-secondary: #C4A882;
+  --text-muted: #8B7355;
+  --font-display: 'Noto Serif TC', serif;
+  --font-body: 'Noto Sans TC', sans-serif;
+}
+
+/* ============================
+   Reset & Base
+   ============================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.8;
+}
+a { color: var(--gold); text-decoration: none; transition: color 0.3s; }
+a:hover { color: var(--gold-light); }
+img { max-width: 100%; height: auto; }
+
+/* ============================
+   進場動畫 — 廟門開啟效果
+   ============================ */
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-dark);
+  cursor: pointer;
+  transition: opacity 0.8s ease;
+}
+#intro-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+.intro-smoke {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 80%, rgba(201,168,76,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 30% 50%, rgba(139,26,26,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 40%, rgba(201,168,76,0.04) 0%, transparent 50%);
+  animation: smokeFloat 6s ease-in-out infinite alternate;
+}
+@keyframes smokeFloat {
+  0% { transform: translateY(0) scale(1); opacity: 0.6; }
+  100% { transform: translateY(-20px) scale(1.05); opacity: 1; }
+}
+
+/* 廟門 */
+.gate-wrapper {
+  position: relative;
+  width: 320px;
+  height: 420px;
+  perspective: 800px;
+}
+.gate-left, .gate-right {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transform-origin: left center;
+  backface-visibility: hidden;
+}
+.gate-left {
+  left: 0;
+  transform-origin: left center;
+  background: linear-gradient(135deg, var(--red-deep) 0%, var(--red) 50%, var(--red-deep) 100%);
+  border-right: 2px solid var(--gold-dark);
+  border-radius: 8px 0 0 8px;
+}
+.gate-right {
+  right: 0;
+  transform-origin: right center;
+  background: linear-gradient(225deg, var(--red-deep) 0%, var(--red) 50%, var(--red-deep) 100%);
+  border-left: 2px solid var(--gold-dark);
+  border-radius: 0 8px 8px 0;
+}
+.gate-left::after, .gate-right::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-light) 30%, var(--gold-dark) 100%);
+  box-shadow: 0 0 15px rgba(201,168,76,0.4);
+}
+.gate-left::after { right: 14px; }
+.gate-right::after { left: 14px; }
+
+/* 門上的裝飾紋路 */
+.gate-left::before, .gate-right::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  bottom: 20px;
+  width: calc(100% - 30px);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 4px;
+}
+.gate-left::before { left: 10px; }
+.gate-right::before { right: 10px; }
+
+.gate-wrapper.open .gate-left { transform: rotateY(-110deg); }
+.gate-wrapper.open .gate-right { transform: rotateY(110deg); }
+
+/* 門內的光 */
+.gate-inner-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(201,168,76,0.15) 0%, transparent 70%);
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 1s ease 0.3s;
+}
+.gate-wrapper.open .gate-inner-glow { opacity: 1; }
+
+/* 門聯文字 */
+.gate-text-left, .gate-text-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--gold);
+  letter-spacing: 0.5em;
+  text-shadow: 0 0 10px rgba(201,168,76,0.3);
+  pointer-events: none;
+  z-index: 2;
+}
+.gate-text-left { left: 30px; }
+.gate-text-right { right: 30px; }
+
+.intro-temple-name {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--gold);
+  text-shadow: 0 0 30px rgba(201,168,76,0.3), 0 2px 4px rgba(0,0,0,0.5);
+  margin-bottom: 32px;
+  letter-spacing: 0.3em;
+  opacity: 0;
+  animation: fadeInUp 1.2s ease 0.3s forwards;
+}
+.intro-hint {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 24px;
+  opacity: 0;
+  animation: fadeInUp 1s ease 1s forwards, pulse 2s ease-in-out 2s infinite;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ============================
+   頂部裝飾邊框
+   ============================ */
+.ornament-top {
+  height: 6px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+  position: relative;
+}
+.ornament-top::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-top: 2px;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+}
+
+/* ============================
+   導航列
+   ============================ */
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(26,10,10,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+  transform: translateY(-100%);
+  transition: transform 0.5s ease;
+}
+#navbar.visible { transform: translateY(0); }
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+}
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  transition: color 0.3s;
+  letter-spacing: 0.05em;
+}
+.nav-links a:hover { color: var(--gold); }
+
+/* 手機版漢堡選單 */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+.nav-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--gold);
+  margin: 5px 0;
+  transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .nav-toggle { display: block; }
+  .nav-links {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: rgba(26,10,10,0.97);
+    padding: 20px 24px;
+    gap: 16px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    display: none;
+  }
+  .nav-links.open { display: flex; }
+}
+
+/* ============================
+   Hero 區塊
+   ============================ */
+#hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  /* ★ 替換為寺廟實際照片 */
+  background: url('https://placehold.co/1920x1080/1A0A0A/C9A84C?text=替換為寺廟照片') center/cover no-repeat;
+  filter: brightness(0.3);
+}
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(26,10,10,0.4), rgba(26,10,10,0.9));
+}
+.hero-particles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(201,168,76,0.4), transparent),
+    radial-gradient(1px 1px at 80% 40%, rgba(201,168,76,0.3), transparent),
+    radial-gradient(1.5px 1.5px at 50% 60%, rgba(201,168,76,0.2), transparent),
+    radial-gradient(1px 1px at 30% 80%, rgba(201,168,76,0.3), transparent),
+    radial-gradient(1px 1px at 70% 15%, rgba(201,168,76,0.2), transparent);
+  animation: particleDrift 8s ease-in-out infinite alternate;
+}
+@keyframes particleDrift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-15px); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 24px;
+}
+.hero-sub {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--gold);
+  letter-spacing: 0.6em;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeInUp 1s ease 0.2s forwards;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 900;
+  color: var(--text-primary);
+  text-shadow: 0 0 40px rgba(201,168,76,0.2);
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: fadeInUp 1s ease 0.5s forwards;
+}
+.hero-divider {
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 20px auto;
+  opacity: 0;
+  animation: fadeInUp 1s ease 0.7s forwards;
+}
+.hero-desc {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 2;
+  opacity: 0;
+  animation: fadeInUp 1s ease 0.9s forwards;
+}
+
+/* ============================
+   通用區塊
+   ============================ */
+.section {
+  padding: 100px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.section-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+.section-label {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--gold-dark);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+.section-line {
+  width: 60px;
+  height: 2px;
+  background: var(--gold);
+  margin: 0 auto;
+}
+
+/* 滾動淡入動畫 */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================
+   關於 / 沿革
+   ============================ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .about-grid { grid-template-columns: 1fr; }
+}
+.about-image {
+  aspect-ratio: 4/3;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.15);
+}
+.about-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.about-image:hover img { transform: scale(1.05); }
+.about-text p {
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  line-height: 2;
+}
+.about-text .highlight {
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-left: 3px solid var(--gold);
+  padding-left: 16px;
+  margin-bottom: 24px;
+}
+
+/* ============================
+   神明介紹
+   ============================ */
+#deities { background: var(--bg-section); }
+.deity-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+}
+.deity-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.4s ease, border-color 0.4s ease;
+}
+.deity-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(201,168,76,0.3);
+}
+.deity-card-img {
+  height: 220px;
+  overflow: hidden;
+}
+.deity-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.deity-card:hover .deity-card-img img { transform: scale(1.08); }
+.deity-card-body {
+  padding: 24px;
+}
+.deity-card-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.deity-card-body .deity-title {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.deity-card-body p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* ============================
+   活動公告
+   ============================ */
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.event-item {
+  display: flex;
+  gap: 24px;
+  background: var(--bg-card);
+  border: 1px solid rgba(201,168,76,0.08);
+  border-radius: 12px;
+  padding: 28px;
+  transition: border-color 0.3s ease;
+  align-items: flex-start;
+}
+.event-item:hover { border-color: rgba(201,168,76,0.25); }
+.event-date {
+  flex-shrink: 0;
+  width: 72px;
+  text-align: center;
+  padding: 12px 0;
+  background: rgba(201,168,76,0.08);
+  border-radius: 8px;
+}
+.event-date .month {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+}
+.event-date .day {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1.2;
+}
+.event-info h3 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.event-info p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.event-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+@media (max-width: 600px) {
+  .event-item { flex-direction: column; gap: 16px; }
+}
+
+/* ============================
+   相片集錦
+   ============================ */
+#gallery { background: var(--bg-section); }
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.gallery-item {
+  aspect-ratio: 4/3;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.gallery-item:hover img { transform: scale(1.08); }
+.gallery-item::after {
+  content: attr(data-caption);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gallery-item:hover::after { opacity: 1; }
+
+/* ============================
+   線上服務（點燈 / 捐款）
+   ============================ */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+}
+.service-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 12px;
+  padding: 40px 32px;
+  text-align: center;
+  transition: border-color 0.4s;
+}
+.service-card:hover { border-color: rgba(201,168,76,0.3); }
+.service-icon {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+.service-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.service-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+  line-height: 1.8;
+}
+.btn-gold {
+  display: inline-block;
+  padding: 12px 32px;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+  color: var(--bg-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.25);
+  color: var(--bg-dark);
+}
+
+/* ============================
+   交通資訊
+   ============================ */
+#contact { background: var(--bg-section); }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+@media (max-width: 768px) {
+  .contact-grid { grid-template-columns: 1fr; }
+}
+.contact-info-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.contact-info-list li {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.contact-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: rgba(201,168,76,0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+.contact-detail h4 {
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+.contact-detail p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.map-embed {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.1);
+  aspect-ratio: 4/3;
+  background: var(--bg-card);
+}
+.map-embed iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ============================
+   Footer
+   ============================ */
+footer {
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 48px 24px;
+  text-align: center;
+}
+.footer-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+.footer-copy {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.footer-socials {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 16px 0;
+}
+.footer-socials a {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: background 0.3s, border-color 0.3s;
+}
+.footer-socials a:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: var(--gold);
+}
+
+/* ============================
+   回到頂部
+   ============================ */
+#back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 48px;
+  height: 48px;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 50%;
+  color: var(--gold);
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s, transform 0.3s, background 0.3s;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+#back-to-top:hover {
+  background: rgba(201,168,76,0.25);
+}
+
+/* ============================
+   Lightbox
+   ============================ */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0,0,0,0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+#lightbox.open { display: flex; }
+#lightbox img {
+  max-width: 90%;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 0 60px rgba(0,0,0,0.5);
+}
+</style>
+</head>
+<body>
+
+<!-- ===========================
+     進場動畫（廟門開啟）
+     =========================== -->
+<div id="intro-overlay">
+  <div class="intro-smoke"></div>
+  <p class="intro-temple-name">○○宮</p>
+  <div class="gate-wrapper" id="gate">
+    <div class="gate-inner-glow"></div>
+    <div class="gate-left"></div>
+    <div class="gate-right"></div>
+    <!-- ★ 替換為實際門聯 -->
+    <span class="gate-text-left">神恩廣佈</span>
+    <span class="gate-text-right">德澤長流</span>
+  </div>
+  <p class="intro-hint">— 點擊開啟廟門 —</p>
+</div>
+
+<!-- ===========================
+     導航列
+     =========================== -->
+<div class="ornament-top"></div>
+<nav id="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo">○○宮</div>
+    <button class="nav-toggle" id="navToggle" aria-label="選單">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">宮廟沿革</a></li>
+      <li><a href="#deities">神明介紹</a></li>
+      <li><a href="#events">活動公告</a></li>
+      <li><a href="#gallery">相片集錦</a></li>
+      <li><a href="#services">線上服務</a></li>
+      <li><a href="#contact">交通聯絡</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===========================
+     Hero
+     =========================== -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-particles"></div>
+  <div class="hero-content">
+    <p class="hero-sub">香火鼎盛 ‧ 神靈顯赫</p>
+    <!-- ★ 替換為寺廟名稱 -->
+    <h1 class="hero-title">○○宮</h1>
+    <div class="hero-divider"></div>
+    <p class="hero-desc">
+      <!-- ★ 替換為寺廟簡短介紹 -->
+      本宮奉祀○○聖母，創建於民國○○年，數十年來護佑鄉里、香火綿延，為地方信仰中心。
+    </p>
+  </div>
+</section>
+
+<!-- ===========================
+     宮廟沿革
+     =========================== -->
+<section id="about" class="section">
+  <div class="section-header reveal">
+    <p class="section-label">About Us</p>
+    <h2 class="section-title">宮廟沿革</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="about-grid reveal">
+    <div class="about-image">
+      <!-- ★ 替換為寺廟歷史照片 -->
+      <img src="https://placehold.co/800x600/1E0E0E/C9A84C?text=寺廟歷史照片" alt="宮廟沿革">
+    </div>
+    <div class="about-text">
+      <p class="highlight">「守護鄉里，傳承信仰」</p>
+      <p>
+        <!-- ★ 替換為實際沿革內容 -->
+        ○○宮創建於民國○○年，初為地方信眾自發搭建之小祠。隨著信眾日增、香火日盛，歷經數次擴建與整修，始有今日之規模。
+      </p>
+      <p>
+        本宮供奉○○聖母為主神，配祀○○帝君、○○菩薩等神尊，長年庇佑地方百姓平安順遂，為社區重要之信仰與文化中心。
+      </p>
+      <p>
+        民國○○年完成最近一次大規模整建，殿宇巍峨、雕樑畫棟，融合傳統閩南建築之美，吸引各方信眾與遊客前來參拜。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     神明介紹
+     =========================== -->
+<section id="deities">
+  <div class="section" style="padding-bottom: 100px;">
+    <div class="section-header reveal">
+      <p class="section-label">Deities</p>
+      <h2 class="section-title">神明介紹</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="deity-cards reveal">
+      <!-- ★ 神明卡片：複製修改以增減 -->
+      <div class="deity-card">
+        <div class="deity-card-img">
+          <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=主祀神明" alt="主祀神明">
+        </div>
+        <div class="deity-card-body">
+          <h3>○○聖母</h3>
+          <p class="deity-title">主祀神明</p>
+          <p>○○聖母慈悲為懷，庇佑蒼生。信眾每遇困難，虔誠祈求無不靈驗，為本宮最受崇敬之神尊。</p>
+        </div>
+      </div>
+
+      <div class="deity-card">
+        <div class="deity-card-img">
+          <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=配祀神明" alt="配祀神明">
+        </div>
+        <div class="deity-card-body">
+          <h3>○○帝君</h3>
+          <p class="deity-title">配祀神明</p>
+          <p>○○帝君威靈顯赫，護國佑民，掌管○○，為信眾祈求事業、學業之守護神。</p>
+        </div>
+      </div>
+
+      <div class="deity-card">
+        <div class="deity-card-img">
+          <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=配祀神明" alt="配祀神明">
+        </div>
+        <div class="deity-card-body">
+          <h3>○○菩薩</h3>
+          <p class="deity-title">配祀神明</p>
+          <p>○○菩薩大慈大悲，聞聲救苦，為信眾祈求平安健康之重要神尊。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     活動公告
+     =========================== -->
+<section id="events" class="section">
+  <div class="section-header reveal">
+    <p class="section-label">Events</p>
+    <h2 class="section-title">活動公告</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="events-list reveal">
+    <!-- ★ 活動項目：複製修改以增減 -->
+    <div class="event-item">
+      <div class="event-date">
+        <span class="month">農曆三月</span>
+        <span class="day">23</span>
+      </div>
+      <div class="event-info">
+        <h3>○○聖母聖誕千秋慶典</h3>
+        <p>恭祝○○聖母聖誕千秋，本宮舉辦祝壽法會、祈安禮斗，歡迎十方善信大德蒞臨參拜。</p>
+        <span class="event-tag">年度大典</span>
+      </div>
+    </div>
+
+    <div class="event-item">
+      <div class="event-date">
+        <span class="month">每月初一</span>
+        <span class="day">1</span>
+      </div>
+      <div class="event-info">
+        <h3>初一十五誦經祈福</h3>
+        <p>每月農曆初一、十五舉辦誦經祈福法會，為信眾消災解厄、增福添慧。</p>
+        <span class="event-tag">例行法會</span>
+      </div>
+    </div>
+
+    <div class="event-item">
+      <div class="event-date">
+        <span class="month">農曆正月</span>
+        <span class="day">15</span>
+      </div>
+      <div class="event-info">
+        <h3>元宵節花燈祈福活動</h3>
+        <p>正月十五元宵佳節，本宮設置花燈祈福區，歡迎闔家蒞臨賞燈、點燈祈福。</p>
+        <span class="event-tag">節慶活動</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     相片集錦
+     =========================== -->
+<section id="gallery">
+  <div class="section">
+    <div class="section-header reveal">
+      <p class="section-label">Gallery</p>
+      <h2 class="section-title">相片集錦</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="gallery-grid reveal">
+      <!-- ★ 相片項目：替換圖片網址與 data-caption -->
+      <div class="gallery-item" data-caption="宮廟全景">
+        <img src="https://placehold.co/800x600/1E0E0E/C9A84C?text=宮廟全景" alt="宮廟全景">
+      </div>
+      <div class="gallery-item" data-caption="正殿內部">
+        <img src="https://placehold.co/800x600/1E0E0E/C9A84C?text=正殿內部" alt="正殿內部">
+      </div>
+      <div class="gallery-item" data-caption="法會實況">
+        <img src="https://placehold.co/800x600/1E0E0E/C9A84C?text=法會實況" alt="法會實況">
+      </div>
+      <div class="gallery-item" data-caption="廟會慶典">
+        <img src="https://placehold.co/800x600/1E0E0E/C9A84C?text=廟會慶典" alt="廟會慶典">
+      </div>
+      <div class="gallery-item" data-caption="建築細節">
+        <img src="https://placehold.co/800x600/1E0E0E/C9A84C?text=建築細節" alt="建築細節">
+      </div>
+      <div class="gallery-item" data-caption="夜間燈飾">
+        <img src="https://placehold.co/800x600/1E0E0E/C9A84C?text=夜間燈飾" alt="夜間燈飾">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     線上服務
+     =========================== -->
+<section id="services" class="section">
+  <div class="section-header reveal">
+    <p class="section-label">Services</p>
+    <h2 class="section-title">線上服務</h2>
+    <div class="section-line"></div>
+  </div>
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-icon">🏮</div>
+      <h3>線上點燈</h3>
+      <p>光明燈、太歲燈、文昌燈、財神燈，為自己與家人點亮一盞平安之燈，祈求整年順遂。</p>
+      <!-- ★ 替換為實際連結或 Google 表單 -->
+      <a href="#" class="btn-gold">前往點燈</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🙏</div>
+      <h3>線上祈福</h3>
+      <p>無法親臨本宮？線上填寫祈福表單，由廟方代為祈福誦經，神明庇佑同在。</p>
+      <a href="#" class="btn-gold">線上祈福</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💛</div>
+      <h3>隨喜捐款</h3>
+      <p>您的善心捐獻將用於寺廟維護、公益慈善、急難救助，廣結善緣、功德無量。</p>
+      <a href="#" class="btn-gold">隨喜樂捐</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     交通與聯絡
+     =========================== -->
+<section id="contact">
+  <div class="section">
+    <div class="section-header reveal">
+      <p class="section-label">Contact</p>
+      <h2 class="section-title">交通與聯絡</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid reveal">
+      <div>
+        <ul class="contact-info-list">
+          <li>
+            <div class="contact-icon">📍</div>
+            <div class="contact-detail">
+              <h4>宮廟地址</h4>
+              <!-- ★ 替換為實際地址 -->
+              <p>○○縣○○鄉○○路○○號</p>
+            </div>
+          </li>
+          <li>
+            <div class="contact-icon">📞</div>
+            <div class="contact-detail">
+              <h4>聯絡電話</h4>
+              <!-- ★ 替換為實際電話 -->
+              <p>（0○）○○○-○○○○</p>
+            </div>
+          </li>
+          <li>
+            <div class="contact-icon">🕐</div>
+            <div class="contact-detail">
+              <h4>開放時間</h4>
+              <!-- ★ 替換為實際時間 -->
+              <p>每日 06:00 – 21:00<br>全年無休</p>
+            </div>
+          </li>
+          <li>
+            <div class="contact-icon">🚗</div>
+            <div class="contact-detail">
+              <h4>交通方式</h4>
+              <!-- ★ 替換為實際交通資訊 -->
+              <p>
+                自行開車：國道○號○○交流道下，沿○○路直行約○分鐘。<br>
+                大眾運輸：搭乘○○客運至○○站下車，步行約○分鐘。
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="map-embed">
+        <!-- ★ 替換為 Google Maps 嵌入碼：
+             到 Google Maps 找到寺廟 → 分享 → 嵌入地圖 → 複製 iframe -->
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3635.123!2d121.0!3d23.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDMwJzAwLjAiTiAxMjHCsDAwJzAwLjAiRQ!5e0!3m2!1szh-TW!2stw!4v1234567890"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===========================
+     Footer
+     =========================== -->
+<footer>
+  <p class="footer-name">○○宮</p>
+  <div class="footer-socials">
+    <!-- ★ 替換為實際社群連結 -->
+    <a href="#" aria-label="Facebook">📘</a>
+    <a href="#" aria-label="Instagram">📷</a>
+    <a href="#" aria-label="LINE">💬</a>
+  </div>
+  <p class="footer-copy">© 2026 ○○宮 版權所有 ｜ 網站設計與維護</p>
+</footer>
+
+<!-- 回到頂部 -->
+<button id="back-to-top" aria-label="回到頂部">↑</button>
+
+<!-- Lightbox -->
+<div id="lightbox"><img src="" alt=""></div>
+
+<!-- ===========================
+     JavaScript
+     =========================== -->
+<script>
+// ---- 進場動畫 ----
+const overlay = document.getElementById('intro-overlay');
+const gate = document.getElementById('gate');
+let introClicked = false;
+
+overlay.addEventListener('click', () => {
+  if (introClicked) return;
+  introClicked = true;
+  gate.classList.add('open');
+  setTimeout(() => {
+    overlay.classList.add('fade-out');
+    document.getElementById('navbar').classList.add('visible');
+  }, 900);
+  setTimeout(() => {
+    overlay.style.display = 'none';
+  }, 1800);
+});
+
+// ---- 導航列手機選單 ----
+document.getElementById('navToggle').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+// 點擊連結後關閉選單
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('open');
+  });
+});
+
+// ---- 滾動淡入 ----
+const reveals = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => revealObserver.observe(el));
+
+// ---- 回到頂部按鈕 ----
+const backToTop = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => {
+  backToTop.classList.toggle('visible', window.scrollY > 600);
+});
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ---- 相片 Lightbox ----
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = lightbox.querySelector('img');
+document.querySelectorAll('.gallery-item').forEach(item => {
+  item.addEventListener('click', () => {
+    lightboxImg.src = item.querySelector('img').src;
+    lightbox.classList.add('open');
+  });
+});
+lightbox.addEventListener('click', () => {
+  lightbox.classList.remove('open');
+  lightboxImg.src = '';
+});
+</script>
+
+</body>
+</html>
