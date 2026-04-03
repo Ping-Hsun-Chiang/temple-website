@@ -822,7 +822,41 @@ document.getElementById('toStep3').addEventListener('click', () => {
   goToStep(3);
 });
 document.getElementById('backTo2').addEventListener('click', () => goToStep(2));
-document.getElementById('toStep4').addEventListener('click', () => goToStep(4));
+const API_URL = "https://script.google.com/macros/s/AKfycbxdy1R3p5mce1fs8Z4SGl34D8lwuXwcMlr8h5lc2ne3awWt0J6cmrjXTZ77SmIXR15f/exec";
+
+document.getElementById('toStep4').addEventListener('click', async () => {
+  const btn = document.getElementById('toStep4');
+  btn.disabled = true;
+  btn.textContent = '送出中，請稍候...';
+
+  const formData = {
+    formType: "lighting",
+    lampType: selectedLamp,
+    quantity: quantity,
+    amount: lampPrice * quantity,
+    name: document.getElementById('name').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    birthday: document.getElementById('birthday').value.trim(),
+    zodiac: document.getElementById('zodiac').value,
+    wish: document.getElementById('wish').value.trim(),
+    address: document.getElementById('address').value.trim(),
+    receipt: document.querySelector('.receipt-choice.selected')?.dataset.receipt === 'yes' ? '需要' : '不需要'
+  };
+
+  try {
+    await fetch(API_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+    goToStep(4);
+  } catch (error) {
+    alert('送出時發生錯誤，請稍後再試。');
+    btn.disabled = false;
+    btn.textContent = '確認送出 ✓';
+  }
+});
 
 // ---- 收據選項 ----
 document.querySelectorAll('.receipt-choice').forEach(choice => {
