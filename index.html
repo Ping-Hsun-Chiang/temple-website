@@ -6,6 +6,19 @@
 <title>六興堂</title>
 <meta name="description" content="歡迎蒞臨 臺南市下營區 過港寮六興堂，主祀玄天六上帝，香火鼎盛、神靈顯赫。">
 
+<!-- ★ Open Graph 標籤 — 控制 LINE / FB 分享時的預覽內容 -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="臺南市下營區 六興堂">
+<meta property="og:description" content="歡迎蒞臨過港寮六興堂，主祀玄天六上帝，香火鼎盛、神靈顯赫，為地方信仰中心。">
+<!-- ★ og:image 請替換為寺廟實際照片的完整網址（建議 1200x630 px） -->
+<meta property="og:image" content="https://ping-hsun-chiang.github.io/temple-website/images/og-cover.jpg">
+<meta property="og:url" content="https://ping-hsun-chiang.github.io/temple-website/">
+<meta property="og:locale" content="zh_TW">
+
+<!-- ★ LINE 專用（LINE 優先讀取這些） -->
+<meta name="line:title" content="臺南市下營區 六興堂">
+<meta name="line:description" content="歡迎蒞臨過港寮六興堂，主祀玄天六上帝，香火鼎盛、神靈顯赫。">
+
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -233,6 +246,55 @@ img { max-width: 100%; height: auto; }
 /* ============================
    頂部裝飾邊框
    ============================ */
+
+/* ============================
+   手機版進場動畫適配
+   ============================ */
+@media (max-width: 768px) {
+  .intro-temple-name {
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    margin-bottom: 20px;
+    padding: 0 16px;
+  }
+  .gate-wrapper {
+    width: 260px;
+    height: 360px;
+  }
+  .gate-text-top {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    top: 12px;
+  }
+  .gate-text-vertical {
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+  }
+  .intro-hint {
+    font-size: 0.8rem;
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 400px) {
+  .intro-temple-name {
+    font-size: 1.3rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .gate-wrapper {
+    width: 220px;
+    height: 300px;
+  }
+  .gate-text-top {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+  }
+  .gate-text-vertical {
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+  }
+}
 .ornament-top {
   height: 6px;
   background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
