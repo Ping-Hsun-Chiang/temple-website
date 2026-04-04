@@ -184,6 +184,10 @@ textarea.form-input { resize: vertical; min-height: 80px; }
   </div>
   <div class="step-item" data-step="3">
     <div class="step-circle">3</div>
+    <div class="step-label">確認資料</div>
+  </div>
+  <div class="step-item" data-step="4">
+    <div class="step-circle">4</div>
     <div class="step-label">匯款確認</div>
   </div>
 </div>
@@ -283,20 +287,43 @@ textarea.form-input { resize: vertical; min-height: 80px; }
         <h4>不需要</h4>
         <p>功德無量</p>
       </div>
-      <div class="receipt-choice" data-receipt="yes">
-        <h4>需要收據</h4>
-        <p>郵寄至上方地址</p>
+      <div class="receipt-choice" data-receipt="pickup">
+        <h4>廟中領取</h4>
+        <p>放置廟中，擇日親領</p>
+      </div>
+      <div class="receipt-choice" data-receipt="mail">
+        <h4>郵寄收據</h4>
+        <p>寄至上方地址</p>
       </div>
     </div>
 
     <div class="btn-row">
       <button class="btn-prev" id="backTo1">← 上一步</button>
-      <button class="btn-next" id="toStep3">下一步：匯款確認 →</button>
+      <button class="btn-next" id="toStepConfirm">下一步：確認資料 →</button>
     </div>
   </div>
 
-  <!-- ===== 步驟 3：匯款確認 ===== -->
+  <!-- ===== 步驟 3：確認資料 ===== -->
   <div class="form-step" id="step3">
+    <h3 class="section-title-sm">請確認以下資料是否正確</h3>
+    <div class="summary-card">
+      <h3>📋 捐款資料確認</h3>
+      <div class="summary-row"><span class="s-label">捐款項目</span><span class="s-value" id="cfmItem">—</span></div>
+      <div class="summary-row"><span class="s-label">捐款金額</span><span class="s-value" id="cfmAmount">—</span></div>
+      <div class="summary-row"><span class="s-label">姓名</span><span class="s-value" id="cfmName">—</span></div>
+      <div class="summary-row"><span class="s-label">聯絡電話</span><span class="s-value" id="cfmPhone">—</span></div>
+      <div class="summary-row"><span class="s-label">地址</span><span class="s-value" id="cfmAddress">—</span></div>
+      <div class="summary-row"><span class="s-label">備註</span><span class="s-value" id="cfmNote">—</span></div>
+      <div class="summary-row"><span class="s-label">收據</span><span class="s-value" id="cfmReceipt">—</span></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-prev" id="backTo2">← 修改資料</button>
+      <button class="btn-next" id="toStep4">確認無誤，下一步 →</button>
+    </div>
+  </div>
+
+  <!-- ===== 步驟 4：匯款確認 ===== -->
+  <div class="form-step" id="step4">
     <div class="summary-card">
       <h3>📋 捐款摘要</h3>
       <div class="summary-row"><span class="s-label">捐款項目</span><span class="s-value" id="sumItem">—</span></div>
@@ -306,7 +333,6 @@ textarea.form-input { resize: vertical; min-height: 80px; }
       <div class="summary-total"><span class="s-label">捐款金額</span><span class="s-value" id="sumAmount">—</span></div>
     </div>
 
-    <!-- ★ 修改為六興堂實際的匯款資訊 -->
     <div class="payment-card">
       <h3>💰 匯款資訊</h3>
       <div class="payment-row">
@@ -339,7 +365,7 @@ textarea.form-input { resize: vertical; min-height: 80px; }
     </div>
 
     <div class="btn-row">
-      <button class="btn-prev" id="backTo2">← 上一步</button>
+      <button class="btn-prev" id="backTo3">← 上一步</button>
       <button class="btn-next" id="toComplete">確認送出 ✓</button>
     </div>
   </div>
@@ -389,7 +415,6 @@ document.querySelectorAll('.amount-btn').forEach(btn => {
     checkReady();
   });
 });
-
 document.getElementById('customAmount').addEventListener('input', (e) => {
   document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('selected'));
   donationAmount = parseInt(e.target.value) || 0;
@@ -405,34 +430,69 @@ function checkReady() {
   document.getElementById('toStep2').disabled = !(selectedItem && donationAmount > 0);
 }
 
-// 步驟切換
+// 收據文字對應
+function getReceiptText() {
+  const rc = document.querySelector('.receipt-choice.selected');
+  if (!rc) return '不需要';
+  const val = rc.dataset.receipt;
+  if (val === 'mail') return '需要（郵寄）';
+  if (val === 'pickup') return '廟中領取';
+  return '不需要';
+}
+
+// 步驟切換（5 個 div：step1, step2, step3, step4, stepDone）
+const stepIds = ['step1', 'step2', 'step3', 'step4', 'stepDone'];
 function goToStep(n) {
   document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-  ['step1','step2','step3','stepDone'][n-1] && document.getElementById(['step1','step2','step3','stepDone'][n-1]).classList.add('active');
+  document.getElementById(stepIds[n - 1]).classList.add('active');
   document.querySelectorAll('.step-item').forEach(s => {
     const sn = parseInt(s.dataset.step);
-    s.classList.remove('active','done');
-    if (sn === n) s.classList.add('active');
+    s.classList.remove('active', 'done');
+    if (sn === n || (n === 5 && sn === 4)) s.classList.add(n === 5 && sn === 4 ? 'done' : 'active');
     if (sn < n) s.classList.add('done');
   });
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// 步驟 1 → 2
 document.getElementById('toStep2').addEventListener('click', () => goToStep(2));
 document.getElementById('backTo1').addEventListener('click', () => goToStep(1));
-document.getElementById('toStep3').addEventListener('click', () => {
+
+// 步驟 2 → 3（確認頁）
+document.getElementById('toStepConfirm').addEventListener('click', () => {
   const name = document.getElementById('name').value.trim();
   const phone = document.getElementById('phone').value.trim();
   if (!name || !phone) { alert('請填寫姓名與聯絡電話'); return; }
-  document.getElementById('sumItem').textContent = selectedItem;
-  document.getElementById('sumName').textContent = name;
-  document.getElementById('sumPhone').textContent = phone;
-  document.getElementById('sumAmount').textContent = 'NT$ ' + donationAmount.toLocaleString();
+  // 如果選郵寄但沒填地址
   const rc = document.querySelector('.receipt-choice.selected');
-  document.getElementById('sumReceipt').textContent = rc && rc.dataset.receipt === 'yes' ? '需要（郵寄）' : '不需要';
+  if (rc && rc.dataset.receipt === 'mail' && !document.getElementById('address').value.trim()) {
+    alert('您選擇郵寄收據，請填寫地址'); return;
+  }
+  document.getElementById('cfmItem').textContent = selectedItem;
+  document.getElementById('cfmAmount').textContent = 'NT$ ' + donationAmount.toLocaleString();
+  document.getElementById('cfmName').textContent = name;
+  document.getElementById('cfmPhone').textContent = phone;
+  document.getElementById('cfmAddress').textContent = document.getElementById('address').value.trim() || '未填';
+  document.getElementById('cfmNote').textContent = document.getElementById('note').value.trim() || '無';
+  document.getElementById('cfmReceipt').textContent = getReceiptText();
   goToStep(3);
 });
+
+// 步驟 3 → 4（匯款頁）
 document.getElementById('backTo2').addEventListener('click', () => goToStep(2));
+document.getElementById('toStep4').addEventListener('click', () => {
+  document.getElementById('sumItem').textContent = selectedItem;
+  document.getElementById('sumName').textContent = document.getElementById('name').value.trim();
+  document.getElementById('sumPhone').textContent = document.getElementById('phone').value.trim();
+  document.getElementById('sumAmount').textContent = 'NT$ ' + donationAmount.toLocaleString();
+  document.getElementById('sumReceipt').textContent = getReceiptText();
+  goToStep(4);
+});
+
+// 步驟 4 返回
+document.getElementById('backTo3').addEventListener('click', () => goToStep(3));
+
+// 步驟 4 → 5（送出 + API）
 const API_URL = "https://script.google.com/macros/s/AKfycbyPl1BmSSBAEnTfo3fNRKDrWN-txODxZiRgH07JhDpe9lBZUy9IzxgQ6Wi5CKngua0s/exec";
 
 document.getElementById('toComplete').addEventListener('click', async () => {
@@ -448,7 +508,7 @@ document.getElementById('toComplete').addEventListener('click', async () => {
     phone: document.getElementById('phone').value.trim(),
     address: document.getElementById('address').value.trim(),
     note: document.getElementById('note').value.trim(),
-    receipt: document.querySelector('.receipt-choice.selected')?.dataset.receipt === 'yes' ? '需要' : '不需要'
+    receipt: getReceiptText()
   };
 
   try {
@@ -458,7 +518,7 @@ document.getElementById('toComplete').addEventListener('click', async () => {
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(formData)
     });
-    goToStep(4);
+    goToStep(5);
   } catch (error) {
     alert('送出時發生錯誤，請稍後再試。');
     btn.disabled = false;
