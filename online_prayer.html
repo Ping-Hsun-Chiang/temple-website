@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>線上祈福 — 六興堂</title>
-<meta name="description" content="六興堂線上祈福服務，無法親臨本宮？由廟方代為祈福誦經，神明庇佑同在。">
+<meta name="description" content="六興堂線上祈福空間。為信眾提供一個沉澱心靈、向神明傾訴的虛擬空間。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@ a:hover { color: var(--gold-light); }
 
 .top-bar { background: rgba(26,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
 .top-bar-logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--gold); letter-spacing: 0.1em; }
-.top-bar-back { font-size: 0.9rem; color: var(--text-secondary); }
+.top-bar-back { font-size: 0.9rem; color: var(--text-secondary); cursor: pointer;}
 .top-bar-back:hover { color: var(--gold); }
 
 .page-hero { text-align: center; padding: 60px 24px 40px; background: linear-gradient(to bottom, rgba(201,168,76,0.05), transparent); }
@@ -35,20 +35,26 @@ a:hover { color: var(--gold-light); }
 
 .form-container { max-width: 650px; margin: 0 auto; padding: 40px 24px 80px; }
 
+/* 區塊切換控制 */
+#step-2 { display: none; }
+.step-transition { animation: fadeIn 0.5s ease forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
 /* 祈福類型選擇 */
 .prayer-types { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 36px; }
 @media (max-width: 500px) { .prayer-types { grid-template-columns: 1fr; } }
 .prayer-type {
-  background: var(--bg-card); border: 2px solid rgba(201,168,76,0.1); border-radius: 12px;
-  padding: 24px 20px; text-align: center; cursor: pointer; transition: all 0.3s;
+  background: var(--bg-card); border: 1px solid rgba(201,168,76,0.15); border-radius: 12px;
+  padding: 32px 20px; text-align: center; cursor: pointer; transition: all 0.3s;
 }
-.prayer-type:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-2px); }
-.prayer-type.selected { border-color: var(--gold); background: rgba(201,168,76,0.06); }
-.prayer-type-icon { font-size: 1.8rem; margin-bottom: 8px; }
-.prayer-type h3 { font-family: var(--font-display); font-size: 1rem; color: var(--gold); margin-bottom: 4px; }
-.prayer-type p { font-size: 0.8rem; color: var(--text-muted); }
-.prayer-type .check-mark { display: none; color: var(--gold); margin-top: 6px; font-size: 0.85rem; }
-.prayer-type.selected .check-mark { display: block; }
+.prayer-type:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(201,168,76,0.1); background: rgba(201,168,76,0.03); }
+.prayer-type-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.prayer-type h3 { font-family: var(--font-display); font-size: 1.1rem; color: var(--gold); margin-bottom: 4px; letter-spacing: 0.05em; }
+.prayer-type p { font-size: 0.85rem; color: var(--text-muted); }
+
+/* 表單樣式 */
+.selected-category-header { text-align: center; margin-bottom: 32px; }
+.selected-category-header span { display: inline-block; padding: 6px 16px; background: rgba(201,168,76,0.1); color: var(--gold); border-radius: 20px; font-size: 0.85rem; letter-spacing: 0.1em; }
 
 .form-group { margin-bottom: 24px; }
 .form-group label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; font-weight: 500; }
@@ -61,18 +67,16 @@ a:hover { color: var(--gold-light); }
 }
 .form-input:focus { border-color: var(--gold); box-shadow: 0 0 12px rgba(201,168,76,0.1); }
 .form-input::placeholder { color: var(--text-muted); }
-textarea.form-input { resize: vertical; min-height: 120px; }
+textarea.form-input { resize: vertical; min-height: 160px; line-height: 1.8; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
 
-.section-title-sm { font-family: var(--font-display); font-size: 1.1rem; color: var(--gold); margin: 36px 0 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(201,168,76,0.1); }
-
 .notice-box {
   background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.12);
-  border-radius: 10px; padding: 20px 24px; margin-top: 24px;
+  border-radius: 10px; padding: 20px 24px; margin-top: 32px;
   font-size: 0.85rem; color: var(--text-secondary); line-height: 1.9;
 }
-.notice-box strong { color: var(--gold); display: block; margin-bottom: 6px; }
+.notice-box strong { color: var(--gold); display: block; margin-bottom: 6px; font-size: 0.95rem; }
 
 .btn-next {
   display: block; width: 100%; padding: 16px; margin-top: 36px;
@@ -89,15 +93,17 @@ textarea.form-input { resize: vertical; min-height: 120px; }
   background: var(--bg-dark); flex-direction: column;
   align-items: center; justify-content: center; text-align: center; padding: 24px;
 }
-.complete-overlay.show { display: flex; }
-.complete-overlay .icon { font-size: 4rem; margin-bottom: 20px; }
-.complete-overlay h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--gold); margin-bottom: 16px; }
+.complete-overlay.show { display: flex; animation: fadeIn 0.8s ease; }
+.complete-overlay .icon { font-size: 4rem; margin-bottom: 20px; text-shadow: 0 0 30px rgba(201,168,76,0.3); }
+.complete-overlay h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--gold); margin-bottom: 16px; letter-spacing: 0.1em; }
 .complete-overlay p { color: var(--text-secondary); max-width: 420px; line-height: 1.9; margin-bottom: 32px; }
 .complete-overlay a {
   display: inline-block; padding: 14px 40px;
-  background: linear-gradient(135deg, var(--gold-dark), var(--gold));
-  border-radius: 8px; color: var(--bg-dark); font-weight: 600; letter-spacing: 0.1em;
+  background: transparent; border: 1px solid var(--gold);
+  border-radius: 8px; color: var(--gold); font-weight: 500; letter-spacing: 0.1em;
+  transition: all 0.3s;
 }
+.complete-overlay a:hover { background: rgba(201,168,76,0.1); }
 
 .page-footer { text-align: center; padding: 32px 24px; border-top: 1px solid rgba(201,168,76,0.08); font-size: 0.8rem; color: var(--text-muted); }
 </style>
@@ -106,113 +112,149 @@ textarea.form-input { resize: vertical; min-height: 120px; }
 
 <div class="top-bar">
   <a href="index.html" class="top-bar-logo">下營庄 六興堂</a>
-  <a href="index.html#services" class="top-bar-back">← 返回主頁</a>
+  <a id="backBtn" class="top-bar-back">← 返回</a>
 </div>
 
 <div class="page-hero">
-  <div class="page-hero-icon">🙏</div>
-  <h1>線上祈福</h1>
-  <p>無法親臨本宮？填寫祈福表單，由廟方代為祈福誦經，神明庇佑同在。</p>
+  <div class="page-hero-icon">🕊️</div>
+  <h1>線上祈願空間</h1>
+  <p>誠心祈願，神明庇佑。<br>此為專屬您的虛擬傾訴空間，讓您隨時隨地沉澱心靈，向上天祈福。</p>
   <div class="page-hero-line"></div>
 </div>
 
 <div class="form-container">
 
-  <!-- 祈福類型 -->
-  <h3 class="section-title-sm">選擇祈福項目</h3>
-  <div class="prayer-types">
-    <!-- ★ 修改祈福項目 -->
-    <div class="prayer-type" data-type="平安祈福">
-      <div class="prayer-type-icon">🕊️</div>
-      <h3>平安祈福</h3>
-      <p>消災解厄、闔家平安</p>
-      <div class="check-mark">✓ 已選擇</div>
-    </div>
-    <div class="prayer-type" data-type="健康祈福">
-      <div class="prayer-type-icon">💚</div>
-      <h3>健康祈福</h3>
-      <p>身體康健、疾病痊癒</p>
-      <div class="check-mark">✓ 已選擇</div>
-    </div>
-    <div class="prayer-type" data-type="事業學業">
-      <div class="prayer-type-icon">📈</div>
-      <h3>事業學業</h3>
-      <p>金榜題名、事業亨通</p>
-      <div class="check-mark">✓ 已選擇</div>
-    </div>
-    <div class="prayer-type" data-type="姻緣感情">
-      <div class="prayer-type-icon">💕</div>
-      <h3>姻緣感情</h3>
-      <p>良緣早結、感情圓滿</p>
-      <div class="check-mark">✓ 已選擇</div>
+  <div id="step-1" class="step-transition">
+    <div class="prayer-types">
+      <div class="prayer-type" data-type="平安祈福">
+        <div class="prayer-type-icon">🏮</div>
+        <h3>平安祈福</h3>
+        <p>消災解厄、出入平安</p>
+      </div>
+      <div class="prayer-type" data-type="健康祈福">
+        <div class="prayer-type-icon">🌿</div>
+        <h3>健康祈福</h3>
+        <p>身體康健、疾病痊癒</p>
+      </div>
+      <div class="prayer-type" data-type="事業學業">
+        <div class="prayer-type-icon">✍️</div>
+        <h3>事業學業</h3>
+        <p>金榜題名、事業亨通</p>
+      </div>
+      <div class="prayer-type" data-type="姻緣感情">
+        <div class="prayer-type-icon">🌸</div>
+        <h3>姻緣感情</h3>
+        <p>良緣早結、感情圓滿</p>
+      </div>
     </div>
   </div>
 
-  <!-- 個人資料 -->
-  <h3 class="section-title-sm">填寫個人資料</h3>
-  <div class="form-row">
-    <div class="form-group">
-      <label>姓名 <span class="required">*</span></label>
-      <input type="text" class="form-input" id="name" placeholder="請輸入姓名">
+  <div id="step-2" class="step-transition">
+    <div class="selected-category-header">
+      <span id="selectedTypeText">平安祈福</span>
     </div>
-    <div class="form-group">
-      <label>農曆生日</label>
-      <input type="text" class="form-input" id="birthday" placeholder="例：民國 80 年 3 月 15 日">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>姓名 <span class="required">*</span></label>
+        <input type="text" class="form-input" id="name" placeholder="請輸入姓名">
+      </div>
+      <div class="form-group">
+        <label>出生年月日</label>
+        <input type="text" class="form-input" id="birthday" placeholder="例：民國 80 年 3 月 15 日">
+      </div>
     </div>
-  </div>
-  <div class="form-row">
+    
     <div class="form-group">
-      <label>聯絡電話 <span class="required">*</span></label>
-      <input type="tel" class="form-input" id="phone" placeholder="09XX-XXX-XXX">
+      <label>居住地</label>
+      <input type="text" class="form-input" id="address" placeholder="請輸入您的居住城市或地址">
     </div>
+
     <div class="form-group">
-      <label>地址</label>
-      <input type="text" class="form-input" id="address" placeholder="選填">
+      <label>心裡的話 <span class="required">*</span></label>
+      <textarea class="form-input" id="wish" placeholder="請寫下您想對神明傾訴的心願、煩惱或期許..."></textarea>
     </div>
+
+    <div class="notice-box">
+      <strong>📋 安心祈願須知</strong>
+      ① 此為提供信眾沉澱心靈之虛擬空間，非實體代辦服務。<br>
+      ② 您的心願於送出後將化為祈願上達天聽。<br>
+      ③ 誠心所願，必有感應，願神明庇佑您。
+    </div>
+
+    <button class="btn-next" id="submitBtn">雙手合十，送出祈願 🙏</button>
   </div>
 
-  <!-- 祈願內容 -->
-  <h3 class="section-title-sm">祈願內容</h3>
-  <div class="form-group">
-    <textarea class="form-input" id="wish" placeholder="請詳述祈願內容，例如：希望家人身體健康、出入平安...&#10;廟方將代為在神前誦經祈福。"></textarea>
-  </div>
-
-  <div class="notice-box">
-    <strong>📋 注意事項</strong>
-    ① 表單送出後，廟方將於三個工作日內安排代為祈福。<br>
-    ② 祈福完成後將透過電話或 LINE 通知。<br>
-    ③ 若有特殊需求，歡迎直接聯繫廟方。
-  </div>
-
-  <button class="btn-next" id="submitBtn">送出祈福表單 🙏</button>
 </div>
 
-<!-- 完成畫面 -->
 <div class="complete-overlay" id="completePage">
-  <div class="icon">🙏</div>
-  <h2>祈福表單已送出</h2>
-  <p>感謝您的虔誠祈願。<br>廟方將盡速為您安排祈福，願神明庇佑、心想事成。</p>
-  <a href="index.html">返回主頁</a>
+  <div class="icon">✨</div>
+  <h2>祈願已上達天聽</h2>
+  <p>您的心意與祈願，玄天六上帝已悉知。<br>所有的煩憂與願景皆已化作清香，系統未留下任何紀錄。<br><br>願您心平氣和，平安順心。</p>
+  <a href="index.html">返回六興堂主頁</a>
 </div>
 
 <div class="page-footer">© 2026 六興堂 版權所有</div>
 
 <script>
-// 祈福類型選擇（可多選）
-document.querySelectorAll('.prayer-type').forEach(t => {
-  t.addEventListener('click', () => t.classList.toggle('selected'));
-});
+  const step1 = document.getElementById('step-1');
+  const step2 = document.getElementById('step-2');
+  const backBtn = document.getElementById('backBtn');
+  const selectedTypeText = document.getElementById('selectedTypeText');
+  
+  let currentStep = 1;
 
-// 送出
-document.getElementById('submitBtn').addEventListener('click', () => {
-  const name = document.getElementById('name').value.trim();
-  const phone = document.getElementById('phone').value.trim();
-  const selected = document.querySelectorAll('.prayer-type.selected');
-  if (selected.length === 0) { alert('請至少選擇一項祈福項目'); return; }
-  if (!name || !phone) { alert('請填寫姓名與聯絡電話'); return; }
-  document.getElementById('completePage').classList.add('show');
-  window.scrollTo({ top: 0 });
-});
+  // 處理返回按鈕邏輯
+  backBtn.addEventListener('click', (e) => {
+    if (currentStep === 2) {
+      // 在表單頁時，退回選擇項目頁
+      e.preventDefault();
+      step2.style.display = 'none';
+      step1.style.display = 'block';
+      currentStep = 1;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // 在第一頁時，正常返回首頁
+      window.location.href = 'index.html#services';
+    }
+  });
+
+  // 點擊祈福類型 -> 進入表單
+  document.querySelectorAll('.prayer-type').forEach(card => {
+    card.addEventListener('click', () => {
+      const typeName = card.getAttribute('data-type');
+      selectedTypeText.innerText = `目前選擇：${typeName}`;
+      
+      step1.style.display = 'none';
+      step2.style.display = 'block';
+      currentStep = 2;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // 送出祈願
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    const name = document.getElementById('name');
+    const birthday = document.getElementById('birthday');
+    const address = document.getElementById('address');
+    const wish = document.getElementById('wish');
+
+    // 基礎驗證
+    if (!name.value.trim() || !wish.value.trim()) { 
+      alert('請填寫姓名與心裡的話，讓神明能聽見您的祈求喔！'); 
+      return; 
+    }
+
+    // 顯示完成畫面
+    document.getElementById('completePage').classList.add('show');
+    window.scrollTo({ top: 0 });
+
+    // ⚡ 核心安全機制：瞬間清空所有輸入框資料，確保不留存 ⚡
+    name.value = '';
+    birthday.value = '';
+    address.value = '';
+    wish.value = '';
+  });
 </script>
 </body>
 </html>
