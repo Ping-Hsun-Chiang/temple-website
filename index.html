@@ -113,6 +113,11 @@ img { max-width: 100%; height: auto; }
   font-weight: 700;
   color: var(--gold);
   letter-spacing: 0.15em;
+  display: flex; align-items: center; gap: 10px;
+}
+.nav-logo-img {
+  height: 52px;
+  width: auto;
 }
 .nav-links { display: flex; gap: 28px; list-style: none; }
 .nav-links a {
@@ -697,15 +702,44 @@ footer {
   border-radius: 8px;
   box-shadow: 0 0 60px rgba(0,0,0,0.5);
 }
+/* 進場 Logo 淡出 */
+#splash-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--bg-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.8s ease;
+}
+#splash-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+.splash-logo {
+  width: clamp(200px, 50vw, 500px);
+  opacity: 0;
+  animation: logoFadeIn 1.5s ease 0.3s forwards;
+}
+@keyframes logoFadeIn {
+  0% { opacity: 0; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1); }
+}
 </style>
 </head>
 <body>
 
+<div id="splash-overlay">
+  <img src="images/website/logo.png" alt="六興堂" class="splash-logo">
+</div>
 <!-- ===========================導航列=========================== -->
 <div class="ornament-top"></div>
 <nav id="navbar">
   <div class="nav-inner">
-    <div class="nav-logo">下營庄 六興堂</div>
+    <div class="nav-logo"><img src="images/website/logo.png" alt="六興堂" class="nav-logo-img">下營庄 六興堂</div>
     <button class="nav-toggle" id="navToggle" aria-label="選單">
       <span></span><span></span><span></span>
     </button>
@@ -977,10 +1011,17 @@ footer {
 <!-- Lightbox -->
 <div id="lightbox"><img src="" alt=""></div>
 
-<!-- ===========================
-     JavaScript
-     =========================== -->
+<!-- =========================== JavaScript =========================== -->
 <script>
+// ---- 進場 Logo 淡出 ----
+const splash = document.getElementById('splash-overlay');
+setTimeout(() => {
+  splash.classList.add('fade-out');
+}, 2200);
+setTimeout(() => {
+  splash.style.display = 'none';
+}, 3000);
+
 // ---- 導航列手機選單 ----
 document.getElementById('navToggle').addEventListener('click', () => {
   document.getElementById('navLinks').classList.toggle('open');
