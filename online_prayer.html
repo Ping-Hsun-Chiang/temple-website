@@ -23,7 +23,21 @@ a { color: var(--gold); text-decoration: none; transition: color 0.3s; }
 a:hover { color: var(--gold-light); }
 
 .top-bar { background: rgba(26,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-.top-bar-logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--gold); letter-spacing: 0.1em; }
+.top-bar-logo { 
+  font-family: var(--font-display); 
+  font-size: 1.2rem; 
+  font-weight: 700; 
+  color: var(--gold); 
+  letter-spacing: 0.1em;
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+}
+
+.top-bar-logo img {
+  height: 44px;
+  width: auto;
+}
 .top-bar-back { font-size: 0.9rem; color: var(--text-secondary); cursor: pointer;}
 .top-bar-back:hover { color: var(--gold); }
 
@@ -111,8 +125,9 @@ textarea.form-input { resize: vertical; min-height: 160px; line-height: 1.8; }
 <body>
 
 <div class="top-bar">
-  <a href="index.html" class="top-bar-logo">下營庄 六興堂</a>
-  <a id="backBtn" class="top-bar-back">← 返回</a>
+  <a href="index.html" class="top-bar-logo">
+    <img src="images/website/logo.png" alt="六興堂 Logo">下營庄 六興堂
+  </a>
 </div>
 
 <div class="page-hero">

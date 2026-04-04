@@ -24,7 +24,22 @@ a:hover { color: var(--gold-light); }
 
 /* 頂部導航 */
 .top-bar { background: rgba(26,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-.top-bar-logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--gold); letter-spacing: 0.1em; }
+/* 修改：加入 flex 讓圖片與文字水平並排與置中 */
+.top-bar-logo { 
+  font-family: var(--font-display); 
+  font-size: 1.2rem; 
+  font-weight: 700; 
+  color: var(--gold); 
+  letter-spacing: 0.1em;
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+}
+/* 新增：設定子頁面 Logo 圖片的大小 */
+.top-bar-logo img {
+  height: 44px; /* 數字可以依照喜好微調放大或縮小 */
+  width: auto;
+}
 .top-bar-back { font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
 .top-bar-back:hover { color: var(--gold); }
 
@@ -193,8 +208,9 @@ textarea.form-input { resize: vertical; min-height: 100px; }
 <body>
 
 <div class="top-bar">
-  <a href="index.html" class="top-bar-logo">下營庄 六興堂</a>
-  <a href="index.html#services" class="top-bar-back">← 返回主頁</a>
+  <a href="index.html" class="top-bar-logo">
+    <img src="images/website/logo.png" alt="六興堂 Logo">下營庄 六興堂
+  </a>
 </div>
 
 <div class="page-hero">
