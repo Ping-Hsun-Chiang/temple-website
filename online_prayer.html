@@ -105,7 +105,11 @@ textarea.form-input { resize: vertical; min-height: 160px; line-height: 1.8; }
 .complete-overlay {
   display: none; position: fixed; inset: 0; z-index: 200;
   background: var(--bg-dark); flex-direction: column;
-  align-items: center; justify-content: center; text-align: center; padding: 24px;
+  align-items: center; 
+  justify-content: flex-start;
+  text-align: center; 
+  padding: 80px 24px 60px;
+  overflow-y: auto;
 }
 .complete-overlay.show { display: flex; animation: fadeIn 0.8s ease; }
 .complete-overlay .icon { font-size: 4rem; margin-bottom: 20px; text-shadow: 0 0 30px rgba(201,168,76,0.3); }
@@ -122,12 +126,14 @@ textarea.form-input { resize: vertical; min-height: 160px; line-height: 1.8; }
 .page-footer { text-align: center; padding: 32px 24px; border-top: 1px solid rgba(201,168,76,0.08); font-size: 0.8rem; color: var(--text-muted); }
 </style>
 </head>
+
 <body>
 
 <div class="top-bar">
   <a href="index.html" class="top-bar-logo">
     <img src="images/website/logo.png" alt="六興堂 Logo">下營庄 六興堂
   </a>
+  <a href="index.html#services" class="top-bar-back">← 回上一頁</a>
 </div>
 
 <div class="page-hero">
@@ -206,70 +212,58 @@ textarea.form-input { resize: vertical; min-height: 160px; line-height: 1.8; }
   <div class="icon">✨</div>
   <h2>祈願已上達天聽</h2>
   <p>您的心意與祈願，玄天六上帝已悉知。<br>所有的煩憂與願景皆已化作清香，系統未留下任何紀錄。<br><br>願您心平氣和，平安順心。</p>
-  <a href="index.html">返回六興堂主頁</a>
+  <div id="prayerAiArea" style="max-width:500px;width:100%;text-align:left;"></div>
+  <div id="prayerActions" style="display:none; max-width:500px; width:100%; margin-top:32px;">
+    <a href="online_prayer.html" class="btn-next" style="display:block; text-align:center; margin-bottom:12px; background:linear-gradient(135deg, var(--gold-dark), var(--gold)); color:var(--bg-dark);">其他祈福</a>
+    <a href="index.html" class="btn-next" style="display:block; text-align:center; background:transparent; border:1px solid var(--gold); color:var(--gold);">回到主頁</a>
+  </div>
 </div>
 
 <div class="page-footer">© 2026 六興堂 版權所有</div>
 
+<script src="js/ai-prayer-response.js"></script>
 <script>
-  const step1 = document.getElementById('step-1');
-  const step2 = document.getElementById('step-2');
-  const backBtn = document.getElementById('backBtn');
-  const selectedTypeText = document.getElementById('selectedTypeText');
-  
-  let currentStep = 1;
+const step1 = document.getElementById('step-1');
+const step2 = document.getElementById('step-2');
+const selectedTypeText = document.getElementById('selectedTypeText');
 
-  // 處理返回按鈕邏輯
-  backBtn.addEventListener('click', (e) => {
-    if (currentStep === 2) {
-      // 在表單頁時，退回選擇項目頁
-      e.preventDefault();
-      step2.style.display = 'none';
-      step1.style.display = 'block';
-      currentStep = 1;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      // 在第一頁時，正常返回首頁
-      window.location.href = 'index.html#services';
-    }
+let currentType = '';
+
+// 點擊祈福類型 -> 進入表單
+document.querySelectorAll('.prayer-type').forEach(card => {
+  card.addEventListener('click', () => {
+    currentType = card.getAttribute('data-type');
+    selectedTypeText.innerText = `目前選擇：${currentType}`;
+    step1.style.display = 'none';
+    step2.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+});
 
-  // 點擊祈福類型 -> 進入表單
-  document.querySelectorAll('.prayer-type').forEach(card => {
-    card.addEventListener('click', () => {
-      const typeName = card.getAttribute('data-type');
-      selectedTypeText.innerText = `目前選擇：${typeName}`;
-      
-      step1.style.display = 'none';
-      step2.style.display = 'block';
-      currentStep = 2;
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  });
+// 送出祈願
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const name = document.getElementById('name').value.trim();
+  const wish = document.getElementById('wish').value.trim();
+  if (!name) { alert('請輸入您的姓名'); return; }
+  if (!wish) { alert('請寫下您想對神明傾訴的心願'); return; }
 
-  // 送出祈願
-  document.getElementById('submitBtn').addEventListener('click', () => {
-    const name = document.getElementById('name');
-    const birthday = document.getElementById('birthday');
-    const address = document.getElementById('address');
-    const wish = document.getElementById('wish');
+  // 顯示完成頁
+  const overlay = document.getElementById('completePage');
+  overlay.classList.add('show');
+  window.scrollTo({ top: 0 });
 
-    // 基礎驗證
-    if (!name.value.trim() || !wish.value.trim()) { 
-      alert('請填寫姓名與心裡的話，讓神明能聽見您的祈求喔！'); 
-      return; 
-    }
-
-    // 顯示完成畫面
-    document.getElementById('completePage').classList.add('show');
-    window.scrollTo({ top: 0 });
-
-    // ⚡ 核心安全機制：瞬間清空所有輸入框資料，確保不留存 ⚡
-    name.value = '';
-    birthday.value = '';
-    address.value = '';
-    wish.value = '';
-  });
+  // AI 安心回應
+  const responseContainer = document.getElementById('prayerAiArea');
+  if (window.PrayerAI && responseContainer) {
+    PrayerAI.showLoading(responseContainer);
+    setTimeout(() => {
+      const result = PrayerAI.generate(wish, currentType);
+      PrayerAI.showResponse(responseContainer, result);
+      document.getElementById('prayerActions').style.display = 'block';
+    }, 2000);
+  }
+});
 </script>
+
 </body>
 </html>

@@ -653,37 +653,6 @@ footer {
 }
 
 /* ============================
-   回到頂部
-   ============================ */
-#back-to-top {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  width: 48px;
-  height: 48px;
-  background: rgba(201,168,76,0.15);
-  border: 1px solid rgba(201,168,76,0.3);
-  border-radius: 50%;
-  color: var(--gold);
-  font-size: 1.2rem;
-  cursor: pointer;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.3s, transform 0.3s, background 0.3s;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#back-to-top.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-#back-to-top:hover {
-  background: rgba(201,168,76,0.25);
-}
-
-/* ============================
    Lightbox
    ============================ */
 #lightbox {
@@ -951,6 +920,13 @@ footer {
       <p>您的善心捐獻將用於寺廟活動、維護修繕，廣結善緣、功德無量。</p>
       <a href="online_donation.html" class="btn-gold">前往捐款</a>
     </div>
+
+    <div class="service-card">
+      <div class="service-icon">🌙</div>
+      <h3>線上擲筊</h3>
+      <p>誠心正意，祈求指引。提供專屬虛擬空間，讓神明為您的疑惑給予溫暖解答。</p>
+      <a href="online_divination.html" class="btn-gold">開始擲筊</a>
+    </div>
   </div>
 </section>
 
@@ -1006,9 +982,6 @@ footer {
   <p class="footer-copy">© 2026 六興堂 版權所有 | 網站設計與維護</p>
 </footer>
 
-<!-- 回到頂部 -->
-<button id="back-to-top" aria-label="回到頂部">↑</button>
-
 <!-- Lightbox -->
 <div id="lightbox"><img src="" alt=""></div>
 
@@ -1045,15 +1018,6 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12 });
 reveals.forEach(el => revealObserver.observe(el));
 
-// ---- 回到頂部按鈕 ----
-const backToTop = document.getElementById('back-to-top');
-window.addEventListener('scroll', () => {
-  backToTop.classList.toggle('visible', window.scrollY > 600);
-});
-backToTop.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
 // ---- 相片 Lightbox ----
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = lightbox.querySelector('img');
@@ -1068,6 +1032,7 @@ lightbox.addEventListener('click', () => {
   lightboxImg.src = '';
 });
 </script>
+<script src="js/ai-chatbot.js"></script>
 
 </body>
 </html>

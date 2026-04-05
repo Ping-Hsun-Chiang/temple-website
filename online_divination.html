@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>線上擲筊 — 六興堂</title>
+<meta name="description" content="六興堂線上擲筊。誠心默念您的疑惑，祈求神明給予指引。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C; --gold-light: #E8D48B; --gold-dark: #A07C28;
+  --red: #8B1A1A; --red-light: #B22222; --red-deep: #5C0A0A;
+  --bg-dark: #1A0A0A; --bg-section: #140808; --bg-card: #1E0E0E;
+  --text-primary: #F5E6C8; --text-secondary: #C4A882; --text-muted: #8B7355;
+  --font-display: 'Noto Serif TC', serif; --font-body: 'Noto Sans TC', sans-serif;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--bg-dark); color: var(--text-primary); line-height: 1.8; min-height: 100vh; overflow-x: hidden; } /* 防止左右亂跳時出現捲軸 */
+a { color: var(--gold); text-decoration: none; transition: color 0.3s; }
+a:hover { color: var(--gold-light); }
+
+/* 頂部導航 */
+.top-bar { background: rgba(26,10,10,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(201,168,76,0.15); padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+.top-bar-logo { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; color: var(--gold); letter-spacing: 0.1em; display: flex; align-items: center; gap: 10px; }
+.top-bar-logo img { height: 44px; width: auto; }
+.top-bar-back { font-size: 0.9rem; color: var(--text-secondary); cursor: pointer;}
+.top-bar-back:hover { color: var(--gold); }
+
+.page-hero { text-align: center; padding: 60px 24px 40px; background: linear-gradient(to bottom, rgba(201,168,76,0.05), transparent); }
+.page-hero-icon { font-size: 3rem; margin-bottom: 16px; }
+.page-hero h1 { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 12px; }
+.page-hero p { color: var(--text-secondary); max-width: 500px; margin: 0 auto; font-size: 0.95rem; }
+.page-hero-line { width: 60px; height: 2px; background: var(--gold); margin: 20px auto 0; }
+
+.form-container { max-width: 600px; margin: 0 auto; padding: 40px 24px 80px; position: relative; }
+
+/* 區塊切換控制 */
+.step-transition { display: none; opacity: 0; }
+.step-transition.active { display: block; animation: fadeIn 0.5s ease forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* 表單樣式 */
+.form-group { margin-bottom: 24px; }
+.form-group label { display: block; font-size: 0.95rem; color: var(--gold); margin-bottom: 12px; font-weight: 500; font-family: var(--font-display); letter-spacing: 0.05em; text-align: center; }
+.form-input { width: 100%; padding: 16px; background: var(--bg-card); border: 1px solid rgba(201,168,76,0.15); border-radius: 8px; color: var(--text-primary); font-family: var(--font-body); font-size: 1rem; transition: border-color 0.3s; outline: none; resize: vertical; min-height: 120px; line-height: 1.8; text-align: center; }
+.form-input:focus { border-color: var(--gold); box-shadow: 0 0 12px rgba(201,168,76,0.1); }
+.form-input::placeholder { color: var(--text-muted); }
+textarea.form-input { text-align: left; }
+
+.notice-box { background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.12); border-radius: 10px; padding: 20px 24px; margin-top: 32px; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.9; }
+
+.btn-main { display: block; width: 100%; padding: 16px; margin-top: 36px; background: linear-gradient(135deg, var(--gold-dark), var(--gold)); border: none; border-radius: 8px; color: var(--bg-dark); font-family: var(--font-body); font-size: 1rem; font-weight: 600; cursor: pointer; letter-spacing: 0.1em; transition: all 0.3s; z-index: 10; position: relative; }
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.25); }
+.btn-main:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* =========================================
+   擲筊區域 — 逼真度與物理動畫 CSS
+   ========================================= */
+.divination-area { text-align: center; padding: 20px 0; position: relative; }
+.question-display { font-size: 1rem; color: var(--text-muted); margin-bottom: 30px; padding: 16px; background: rgba(26,10,10,0.5); border-radius: 8px; border: 1px dashed rgba(201,168,76,0.2); font-style: italic; }
+
+/* 筊杯容器 — 需要能透出亂跳的筊杯 */
+.biao-container {
+  display: flex; justify-content: center; align-items: center; gap: 40px;
+  height: 250px; margin-bottom: 20px;
+  perspective: 1500px; /* 增強 3D 立體感 */
+  position: relative;
+  /* overflow: visible; 重要：讓筊杯可以飛出容器範圍 */
+}
+
+/* 筊杯主體共用樣式 — 這裡定義獨特的月牙形狀 */
+.biao {
+  width: 80px; height: 160px;
+  position: relative;
+  transition: transform 0.1s linear, box-shadow 0.1s linear; /* JS 物理動畫需要快速反應 */
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); /* 基礎落地陰影 */
+}
+
+/* 利用 pseudo-element 製作具有木質紋理漸層的立體筊杯 */
+.biao::after {
+  content: '';
+  position: absolute; inset: 0;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.3); /* 內部凹陷光影 */
+  transition: background 0.3s;
+}
+
+/* 月牙形狀修正 ( border-radius ) */
+.biao.left::after { border-radius: 10px 10px 10px 100%; } /* 左半邊 */
+.biao.right::after { border-radius: 10px 10px 100% 10px; } /* 右半邊 */
+
+/* 陰面樣式 — 凸面 ( Domed, 深漆紅 ) */
+.biao.yin::after {
+  /* 使用複雜徑向漸層模擬凸起光澤 */
+  background: 
+    radial-gradient(circle at 70% 30%, #b22222 0%, #8b1a1a 40%, #5c0a0a 100%),
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36z8gAFUASYKRIgFFgoEiAAYYBBggA5HUGN5UAAAAASUVORK5CYII='); /* 微小的雜點模擬木紋 */
+  border: 2px solid #5c0a0a;
+}
+
+/* 陽面樣式 — 平面 ( Flat, 淺朱紅 ) */
+.biao.yang::after {
+  /* 使用線性漸層模擬平面，光澤較少 */
+  background: 
+    linear-gradient(135deg, #d42828 0%, #b22222 100%),
+    url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36z8gAFUASYKRIgFFgoEiAAYYBBggA5HUGN5UAAAAASUVORK5CYII=');
+  border: 2px solid #a07c28; /* 加上一點金色邊緣模擬磨損 */
+}
+
+/* 結果文字 */
+.result-display { display: none; opacity: 0; transform: translateY(20px); transition: all 0.6s ease; margin-top: -10px; position: relative; z-index: 5; }
+.result-display.show { display: block; opacity: 1; transform: translateY(0); }
+.result-title { font-family: var(--font-display); font-size: 2.2rem; color: var(--gold); margin-bottom: 8px; letter-spacing: 0.1em; text-shadow: 0 0 20px rgba(201,168,76,0.3); }
+.result-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.8; max-width: 450px; margin: 0 auto; }
+
+.page-footer { text-align: center; padding: 32px 24px; border-top: 1px solid rgba(201,168,76,0.08); font-size: 0.8rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html" class="top-bar-logo">
+    <img src="images/website/logo.png" alt="六興堂 Logo">下營庄 六興堂
+  </a>
+  <a href="index.html#services" class="top-bar-back">← 回上一頁</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-icon">🌙</div>
+  <h1>線上擲筊</h1>
+  <p>誠心正意，神明必有指引。<br>請在心中默念您的姓名與疑惑，再點擊擲筊。</p>
+  <div class="page-hero-line"></div>
+</div>
+
+<div class="form-container">
+
+  <div id="step-1" class="step-transition active">
+    <div class="form-group">
+      <label>請在心中默念，或在此寫下您的問題</label>
+      <textarea class="form-input" id="question" placeholder="例如：信女ＯＯＯ，家住ＯＯＯ，想請示神明關於工作轉換的事情..."></textarea>
+    </div>
+
+    <div class="notice-box">
+      <strong>🙏 擲筊小提醒</strong>
+      ① 請保持心平氣和，誠心向神明請示。<br>
+      ② 每個問題請盡量明確，以「好/不好」、「可以/不可以」為原則。<br>
+      ③ 此系統僅提供心靈指引與安慰，請以正向心態參考。
+    </div>
+
+    <button class="btn-main" id="readyBtn">我已默念完畢，準備擲筊 →</button>
+  </div>
+
+  <div id="step-2" class="step-transition">
+    <div class="divination-area">
+      <div class="question-display" id="questionDisplay">
+        </div>
+
+      <div class="biao-container" id="biaoContainer">
+        <div class="biao left yin" id="biaoLeft"></div>
+        <div class="biao right yang" id="biaoRight"></div>
+      </div>
+
+      <button class="btn-main" id="throwBtn">誠心擲筊 🙏</button>
+
+      <div class="result-display" id="resultDisplay">
+        <h2 class="result-title" id="resultTitle">聖杯</h2>
+        <p class="result-desc" id="resultDesc">神明允諾！這是一個吉祥的徵兆。</p>
+        
+        <div style="display:flex; flex-direction:column; gap:16px; margin-top: 32px;">
+          <button class="btn-main" id="throwAgainBtn" style="margin-top: 0;">再次擲筊</button>
+          <div style="display:flex; gap:16px;">
+            <button class="btn-main" id="retryBtn" style="margin-top:0; background:transparent; border:1px solid var(--gold); color:var(--gold); flex:1;">重新提問</button>
+            <a href="index.html" class="btn-main" style="margin-top:0; background:transparent; border:1px solid var(--gold); color:var(--gold); flex:1; text-align:center; box-sizing:border-box;">回到主頁</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">© 2026 六興堂 版權所有</div>
+
+<script>
+  const step1 = document.getElementById('step-1');
+  const step2 = document.getElementById('step-2');
+  const questionInput = document.getElementById('question');
+  const questionDisplay = document.getElementById('questionDisplay');
+  const throwBtn = document.getElementById('throwBtn');
+  const biaoContainer = document.getElementById('biaoContainer');
+  const biaoLeft = document.getElementById('biaoLeft');
+  const biaoRight = document.getElementById('biaoRight');
+  const resultDisplay = document.getElementById('resultDisplay');
+  const resultTitle = document.getElementById('resultTitle');
+  const resultDesc = document.getElementById('resultDesc');
+  const retryBtn = document.getElementById('retryBtn');
+
+  let currentStep = 1;
+  let isThrowing = false; // 防止重複點擊
+
+  // 準備擲筊
+  document.getElementById('readyBtn').addEventListener('click', () => {
+    const q = questionInput.value.trim() || '（信眾心中默默請示的事項）';
+    questionDisplay.innerText = `「 ${q} 」`;
+    
+    step1.classList.remove('active');
+    step2.classList.add('active');
+    currentStep = 2;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // =========================================
+  // 核心：現實擲筊物理模擬動畫 (JS)
+  // =========================================
+  // 定義共用的擲筊執行邏輯
+  function executeThrow() {
+    if (isThrowing) return;
+    isThrowing = true;
+
+    // 1. 隱藏最初的擲筊按鈕與之前的結果
+    throwBtn.style.display = 'none';
+    resultDisplay.classList.remove('show');
+    
+    // 2. 決定最終結果
+    const roll = Math.random();
+    let finalStateL = ''; 
+    let finalStateR = '';
+    let rTitle = '';
+    let rDesc = '';
+
+    if (roll < 0.70) { 
+      finalStateL = 'yin'; finalStateR = 'yang';
+      rTitle = '聖 杯';
+      rDesc = '神明允諾！這是一個非常吉祥的徵兆，代表神明同意、贊成您的想法，請安心前行。';
+    } else if (roll < 0.85) { 
+      finalStateL = 'yang'; finalStateR = 'yang';
+      rTitle = '笑 杯';
+      rDesc = '神明面帶微笑。可能代表問題敘述不夠清楚，或是時機尚未成熟，建議您靜心思考後換個方式再問一次。';
+    } else { 
+      finalStateL = 'yin'; finalStateR = 'yin';
+      rTitle = '陰 杯';
+      rDesc = '神明不贊同，或認為此事有待商榷。請靜下心來思考其他可能性，神明會庇佑您找到更好的出路。';
+    }
+
+    // 3. 啟動物理模擬動畫
+    simulateRealisticThrow(() => {
+      biaoLeft.className = `biao left ${finalStateL}`;
+      biaoRight.className = `biao right ${finalStateR}`;
+      
+      resultTitle.innerText = rTitle;
+      resultDesc.innerText = rDesc;
+      resultDisplay.classList.add('show');
+      
+      isThrowing = false;
+    });
+  }
+
+  // 綁定最初的擲筊按鈕與新的再次擲筊按鈕
+  throwBtn.addEventListener('click', executeThrow);
+  document.getElementById('throwAgainBtn').addEventListener('click', executeThrow);
+
+  // JS 物理模擬動畫函式
+  function simulateRealisticThrow(callback) {
+    const duration = 1500; // 總動畫時間 (ms)
+    const startTime = Date.now();
+    
+    // 設定初始飛起的爆發力
+    const blocks = [
+      { el: biaoLeft, vx: (Math.random() - 0.5) * 60, vy: -120 - Math.random() * 50 },
+      { el: biaoRight, vx: (Math.random() - 0.5) * 60, vy: -120 - Math.random() * 50 }
+    ];
+
+    // 動畫迴圈
+    const animationLoop = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      
+      // 如果時間到了，停止迴圈並平滑回歸中心
+      if (elapsed >= duration) {
+        clearInterval(animationLoop);
+        settleBlocks(callback);
+        return;
+      }
+
+      // 計算彈跳階段的隨機位置與旋轉 (模擬在螢幕中間亂跳)
+      blocks.forEach(block => {
+        // 賦予極大的隨機位移量，讓它們飛出容器 (相對於原本位置)
+        // Y軸大幅向上飛，X軸左右飛，範圍覆蓋大半螢幕
+        const randomX = (Math.random() - 0.5) * window.innerWidth * 0.7; 
+        const randomY = (Math.random() - 0.7) * window.innerHeight * 0.6 - 50; 
+        
+        // 隨機的 3D 旋轉
+        const rotX = Math.random() * 1000 - 500;
+        const rotY = Math.random() * 1000 - 500;
+        const rotZ = Math.random() * 360;
+        
+        // 隨機的高度感 (縮放與陰影)
+        const scale = 0.9 + Math.random() * 0.3;
+        const shadowBlur = 20 + Math.random() * 30;
+
+        // 套用樣式 (核心：在螢幕中間亂跳)
+        block.el.style.transform = `translate(${randomX}px, ${randomY}px) rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(${scale})`;
+        block.el.style.filter = `drop-shadow(0 ${shadowBlur}px ${shadowBlur/2}px rgba(0,0,0,0.3))`;
+        
+        // 隨機切換陰陽面 (動畫中看起來像在翻轉)
+        if (Math.random() > 0.5) {
+          block.el.classList.remove('yin', 'yang');
+          block.el.classList.add(Math.random() > 0.5 ? 'yin' : 'yang');
+        }
+      });
+
+    }, 100); // 每 100ms 更新一次隨機位置，營造混亂感
+
+    // 落地平滑收回函式
+    function settleBlocks(completionCallback) {
+      blocks.forEach(block => {
+        // 變更為較慢且平滑的過渡效果
+        block.el.style.transition = 'transform 0.5s cubic-bezier(0.17, 0.67, 0.83, 0.67), filter 0.3s ease';
+        // 歸零所有位移與旋轉，回到容器中心 ( landed )
+        block.el.style.transform = 'translate(0px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1)';
+        block.el.style.filter = 'drop-shadow(0 10px 15px rgba(0,0,0,0.5))'; // 恢復基礎陰影
+      });
+
+      // 等待 0.5s 平滑過渡結束後，呼叫結果
+      setTimeout(() => {
+        completionCallback();
+      }, 500);
+    }
+  }
+
+  // 再次請示
+  retryBtn.addEventListener('click', () => {
+    if (isThrowing) return;
+    resetDivinationUI();
+    questionInput.value = ''; // 清空問題
+    step2.classList.remove('active');
+    step1.classList.add('active');
+    currentStep = 1;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 重置 UI 狀態
+  function resetDivinationUI() {
+    throwBtn.style.display = 'block';
+    throwBtn.disabled = false;
+    resultDisplay.classList.remove('show');
+    // 恢復預設準備狀態 (一陰一陽)
+    biaoLeft.className = 'biao left yin'; 
+    biaoRight.className = 'biao right yang';
+    // 清除可能殘留的 inline style transition
+    biaoLeft.style.transition = '';
+    biaoRight.style.transition = '';
+  }
+</script>
+</body>
+</html>
