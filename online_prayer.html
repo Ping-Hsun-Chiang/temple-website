@@ -263,7 +263,7 @@ document.getElementById('submitBtn').addEventListener('click', async () => {
     const result = await PrayerAI.generate(wish, currentType, name);
     PrayerAI.showResponse(responseContainer, result);
   } catch (err) {
-    PrayerAI.showResponse(responseContainer, PrayerAI.getFallback(currentType));
+    PrayerAI.showError(responseContainer, err.message);
   }
 
   document.getElementById('prayerActions').style.display = 'block';

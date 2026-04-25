@@ -13,7 +13,7 @@
   // ============================================================
   // ★ 填入你的 Google Apps Script 部署網址
   // ============================================================
-  const PRAYER_API_URL = 'https://script.google.com/macros/s/AKfycbyeBsqpMH1nwiF8SNV_kB0eZfKJtHs6hhNY8Z_wmpF2yPSdYStIINAlgQig7BVzkCUcQA/exec'; // 例：'https://script.google.com/macros/s/AKfy.../exec'
+  const PRAYER_API_URL = 'https://script.google.com/macros/s/AKfycby0xOkqWHoK7RDU_Wiu1YHNai_GAHW24N0iImQuGGLLL00OPeTwZHoCnaVy6p-lqDXX6Q/exec'; // 例：'https://script.google.com/macros/s/AKfy.../exec'
 
   // ============================================================
   // 回應卡片的圖示對應（依祈福類型）
@@ -26,21 +26,12 @@
   };
 
   // ============================================================
-  // 網路異常時的備用靜態回應
-  // ============================================================
-  const FALLBACK_RESPONSES = [
-    '您的心意，廟方已恭敬收下。\n\n誠心的祈願，如清香裊裊上達天聽，每一份來自心底的祝願都有它的重量。願這份虔誠為您帶來安定的力量，心中所盼，一步步實現。\n\n願神明庇佑，平安順心。',
-    '感謝您在此靜下心來，向神明傾訴心中所願。\n\n古人云：「心誠則靈」，您的一份誠意，已化作最真摯的祈願。廟方將代為在神前誦經，願您所求所盼，在踏實前行中逐漸實現。\n\n願您日日安康，事事順遂。',
-    '您的祈願已化作清香，悄悄上達天聽。\n\n生命中有些時刻，需要的不是答案，而是一份安心與力量。願這份祈福陪伴您面對每一天，在努力的路上不覺孤單。\n\n玄天六上帝慈悲護佑，願您平安喜樂。'
-  ];
-
-  // ============================================================
   // 主 API 呼叫（回傳 Promise）
   // ============================================================
 
   async function generate(wish, prayerType, name) {
     if (!PRAYER_API_URL) {
-      return buildResult(randomFallback(), prayerType);
+      throw new Error('PRAYER_API_URL 尚未設定');
     }
 
     const body = JSON.stringify({ prayerType, wish, name: name || '' });
@@ -54,26 +45,14 @@
     const data = await response.json();
 
     if (!data.success || !data.response) {
-      throw new Error('API 回傳無效');
+      throw new Error(data.error || 'API 回傳無效');
     }
 
-    return buildResult(data.response, prayerType);
-  }
-
-  function buildResult(responseText, prayerType) {
     return {
-      response: responseText,
+      response: data.response,
       icon: TYPE_ICON[prayerType] || '🙏',
       prayerType: prayerType || ''
     };
-  }
-
-  function randomFallback() {
-    return FALLBACK_RESPONSES[Math.floor(Math.random() * FALLBACK_RESPONSES.length)];
-  }
-
-  function getFallback(prayerType) {
-    return buildResult(randomFallback(), prayerType);
   }
 
   // ============================================================
@@ -124,6 +103,25 @@
       margin-top: 20px; padding-top: 16px;
       border-top: 1px solid rgba(201,168,76,0.08);
       font-size: 0.75rem; color: #8B7355; text-align: center;
+    }
+
+    /* 錯誤訊息 */
+    .prayer-ai-error {
+      background: rgba(139,26,26,0.08);
+      border: 1px solid rgba(139,26,26,0.25);
+      border-radius: 12px;
+      padding: 28px 24px;
+      margin-top: 28px;
+      text-align: center;
+      animation: prFadeIn 0.5s ease;
+    }
+    .prayer-ai-error-icon { font-size: 2rem; margin-bottom: 12px; }
+    .prayer-ai-error-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1rem; color: #C4A882; margin-bottom: 8px;
+    }
+    .prayer-ai-error-detail {
+      font-size: 0.8rem; color: #8B7355; line-height: 1.8;
     }
 
     /* 載入動畫 */
@@ -209,6 +207,23 @@
   style.textContent = PRAYER_RESPONSE_CSS;
   document.head.appendChild(style);
 
-  window.PrayerAI = { generate, showLoading, showResponse, getFallback };
+  function showError(container, errMessage) {
+    const loading = document.getElementById('prayerAiLoading');
+    if (loading) loading.remove();
+
+    const div = document.createElement('div');
+    div.className = 'prayer-ai-error';
+    div.innerHTML = `
+      <div class="prayer-ai-error-icon">⚠️</div>
+      <div class="prayer-ai-error-title">祈福系統暫時無法連線</div>
+      <div class="prayer-ai-error-detail">
+        ${errMessage ? escapeHtml(errMessage) + '<br><br>' : ''}
+        請稍後再試，或直接前往廟方 Facebook 粉專告知祈願內容。
+      </div>
+    `;
+    container.appendChild(div);
+  }
+
+  window.PrayerAI = { generate, showLoading, showResponse, showError };
 
 })();
