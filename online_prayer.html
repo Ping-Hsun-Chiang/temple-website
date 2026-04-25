@@ -241,27 +241,32 @@ document.querySelectorAll('.prayer-type').forEach(card => {
 });
 
 // 送出祈願
-document.getElementById('submitBtn').addEventListener('click', () => {
+document.getElementById('submitBtn').addEventListener('click', async () => {
   const name = document.getElementById('name').value.trim();
   const wish = document.getElementById('wish').value.trim();
   if (!name) { alert('請輸入您的姓名'); return; }
   if (!wish) { alert('請寫下您想對神明傾訴的心願'); return; }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '祈願傳遞中...';
 
   // 顯示完成頁
   const overlay = document.getElementById('completePage');
   overlay.classList.add('show');
   window.scrollTo({ top: 0 });
 
-  // AI 安心回應
   const responseContainer = document.getElementById('prayerAiArea');
-  if (window.PrayerAI && responseContainer) {
-    PrayerAI.showLoading(responseContainer);
-    setTimeout(() => {
-      const result = PrayerAI.generate(wish, currentType);
-      PrayerAI.showResponse(responseContainer, result);
-      document.getElementById('prayerActions').style.display = 'block';
-    }, 2000);
+  PrayerAI.showLoading(responseContainer);
+
+  try {
+    const result = await PrayerAI.generate(wish, currentType, name);
+    PrayerAI.showResponse(responseContainer, result);
+  } catch (err) {
+    PrayerAI.showResponse(responseContainer, PrayerAI.getFallback(currentType));
   }
+
+  document.getElementById('prayerActions').style.display = 'block';
 });
 </script>
 
