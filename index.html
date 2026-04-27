@@ -696,6 +696,150 @@ footer {
   50% { opacity: 1; transform: scale(1); }
   100% { opacity: 1; transform: scale(1); }
 }
+
+/* ============================ 詳細資訊 Modal ============================ */
+.info-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: rgba(0,0,0,0.88);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+}
+.info-modal-overlay.open { display: flex; }
+
+.info-modal-box {
+  background: var(--bg-card);
+  border: 1px solid rgba(201,168,76,0.28);
+  border-radius: 16px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+}
+.info-modal-header {
+  padding: 22px 28px 16px;
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-shrink: 0;
+}
+.info-modal-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+.info-modal-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+.info-modal-close {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid rgba(201,168,76,0.25);
+  color: var(--gold);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, border-color 0.3s;
+}
+.info-modal-close:hover {
+  background: rgba(201,168,76,0.12);
+  border-color: var(--gold);
+}
+.info-modal-body {
+  padding: 22px 28px 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+.info-modal-body p {
+  color: var(--text-secondary);
+  line-height: 2;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+.info-modal-body p:last-child { margin-bottom: 0; }
+
+/* About 區塊 — 預覽 */
+.about-text-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.about-text-top .highlight { margin-bottom: 0; flex: 1; }
+.about-preview-wrap {
+  position: relative;
+  max-height: 200px;
+  overflow: hidden;
+}
+.about-preview-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(transparent, #1A0A0A);
+  pointer-events: none;
+}
+
+/* Deity card — 預覽 */
+.deity-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.deity-card-top > div { flex: 1; min-width: 0; }
+.deity-card-top h3 { margin-bottom: 4px; }
+.deity-card-top .deity-title { margin-bottom: 0; }
+.deity-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+/* 展開按鈕 */
+.expand-btn {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  padding: 5px 13px;
+  border-radius: 20px;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: background 0.3s, border-color 0.3s;
+  white-space: nowrap;
+}
+.expand-btn:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: var(--gold);
+}
 </style>
 </head>
 <body>
@@ -748,29 +892,34 @@ footer {
       <img src="images/website/temple.jpg" alt="宮廟沿革">
     </div>
     <div class="about-text">
-      <p class="highlight">「守護鄉里，傳承信仰」</p>
-      <p>
-        一百四十年前（西元一八七二年），下營港墘寮（現址是下營區寮前東邊）住有一善士，名叫姜林存，家中供奉「玄天六上帝」、「觀音佛祖」、「觀音二佛租」，朝夕虔誠膜拜，精進修持，得神祇護持，成為乩身，替人消災解厄，指點迷津，神威遠播，信徒日眾，部落住民尊為主神而供奉之。每年擇於農曆五月十二日，舉行拜拜慶典，以酬謝浩瀚神恩。 至今還留有「玄天六上帝顯靈捉拿隱身盜賊」的精彩傳說。
-      </p>
-      <p>
-        八十多年前（約西元一九二一年起），土地重劃，挖掘大排水溝，碎裂地靈，改變地貌，每逢兩季，則積水不退，汪洋一片，五月慶典的供品、咸棚、香客們常被浸泡或漂流在水中，經執事長老們商議請示神明後，慶典日就改為農曆十月二十六日，以避開洪汛。
-      </p>
-      <p>
-        靈氣既散，神明焦慮，百姓不安，穀稼欠收，居民漸漸遷住現址（新興里束興國小南邊）—新結庄仔，「港墘寮」漸趨寂寥，炊煙不見，磚瓦飄散，它的名字已被遗忘，祖先風華不再，足跡難掇，眼前所見的是一片田野。「新結庄仔」塑造新生命的起點，神尊就輪流供奉在每年選出爐主的家中。幸得光復後第一任村長姜林戊全力協助，維繫香火不斷，殷啟神光朗耀。然慶典活動依舊在馬路上進行，格局侷促，塵土飛揚，既不雅觀，又欠衛生，有失對神尊的虔敬。信眾新興村村長姜林德欽、姜林筆、姜林變、陳德豐、許榮貴等士紳，乃倡議「取正名，建廟堂」，以莊嚴道場，雄振神威，關揚法味，懾服民心。民國五十四年，姜林德欽、陳徳盟、鄉民代表會主席姜天造等人以六萬元，和張銀茂（下營上帝廟土地原承租人）磋商，獲得一百五十坪土地的轉承租權，基地始得，神道紮根。又經智珠在握的美林德欽，姜林都思索寓意，連結神旨，廟名定為「六興堂」。意義是：聖德神功，六合禎祥，宣化興仁，饒益家邦，匡正人心，國泰民安。
-      </p>
-      <p>
-        民國五十六年六月，開始向信眾募集建廟基金，同時委請姜天造先生研訂「六興堂管理委員會」組織章程，健全架構，職掌分明，並向政府申請寺廟登記，以示合法、正統、蔚成信仰、行善、宗教文化活動的重要場所。廟堂肇建，財力物力幾番琢磨，於民國六十四年式落成，並敦請釋傳妙大師撰寫對聯二幅：正門對聯：玄機妙奧手持星劍騰威武天界分靈位鎮北方護庶民橫批：玄冥斗宿天下威尊六上帝神龕對聯：上下雍和祠廟重新崇厥德帝恩浩大香煙鼎盛秉神權
-      </p>
-      <p>
-        堂內供奉的神祇是：玄天六上帝、部將 康元帥、部將 趙元帥、觀音佛祖、觀音二佛祖、黑虎大將軍、軍師伍關大帝
-      </p>
-      <p>
-        廟堂落成，香煙嬝燥，和音悠悠，神光炯炯，喜氣洋洋，盛讚捐資，無畏布施者功德無量。廟堂內設有靈籤、藥籤，相當應驗。典藏「山不在高，有仙則名；水不在深，有龍則靈。」民國八十五年，下營上帝廟開放土地承租者，可以進行買賣交割。管理委員會再募集二百七十萬元，正式取得「六興堂」座落的一百五十坪土地所有權，同時以管理人吳金益身份申請寺廟產權變動登記，完成一切合法手續。民國九十七年八月於廟堂南側，興建符合環保概念的金爐一座。民國一〇一年八月，以姜進忠名義，加入台南市南瀛道教會團體會員。民國一〇一年初，接壤在廟堂正西的八十七坪私人土地，被洪宗瀚先生買走，將築牆建屋，必定朦遮神尊視野，沖煞靈氣；虔誠信眾姜太平得悉，屢有不舒適預兆，靜思感悟神機後，立即邀請委員們共同討論，揣摩神意，咸認斯土，是「六興堂」成為神聖道場必要之寶地，如添購後可補狹隘廟地之不足，一致決議請求洪先生以原購價錢三百一十萬元割愛，洪先生也慈悲的答允，「六興堂」發展的藍圖遂完整的呈現。此地買妥，奇妙地有位陌生住在布袋鎮青年，於今年二月趨車來到「六興堂」題詩贈語，讚譽神威，褒揚善德，勖勉修行，恢宏廟堂。記憶容易消逝，藉此記述，希冀鑑古知今，六興堂信眾，永遠沐浴在神光普照之下，安樂常喜，叩謝神恩，特為誌之。
-      </p>
-      <p>
-        民國一〇一年歲次壬辰年陽月六興堂管理委員會 敬撰
-      </p>
+      <div class="about-text-top">
+        <p class="highlight">「守護鄉里，傳承信仰」</p>
+        <button class="expand-btn" data-modal-title="宮廟沿革" data-modal-source="about-preview">完整閱讀 ›</button>
       </div>
+      <div class="about-preview-wrap" id="about-preview">
+        <p>
+          一百四十年前（西元一八七二年），下營港墘寮（現址是下營區寮前東邊）住有一善士，名叫姜林存，家中供奉「玄天六上帝」、「觀音佛祖」、「觀音二佛租」，朝夕虔誠膜拜，精進修持，得神祇護持，成為乩身，替人消災解厄，指點迷津，神威遠播，信徒日眾，部落住民尊為主神而供奉之。每年擇於農曆五月十二日，舉行拜拜慶典，以酬謝浩瀚神恩。 至今還留有「玄天六上帝顯靈捉拿隱身盜賊」的精彩傳說。
+        </p>
+        <p>
+          八十多年前（約西元一九二一年起），土地重劃，挖掘大排水溝，碎裂地靈，改變地貌，每逢兩季，則積水不退，汪洋一片，五月慶典的供品、咸棚、香客們常被浸泡或漂流在水中，經執事長老們商議請示神明後，慶典日就改為農曆十月二十六日，以避開洪汛。
+        </p>
+        <p>
+          靈氣既散，神明焦慮，百姓不安，穀稼欠收，居民漸漸遷住現址（新興里束興國小南邊）—新結庄仔，「港墘寮」漸趨寂寥，炊煙不見，磚瓦飄散，它的名字已被遗忘，祖先風華不再，足跡難掇，眼前所見的是一片田野。「新結庄仔」塑造新生命的起點，神尊就輪流供奉在每年選出爐主的家中。幸得光復後第一任村長姜林戊全力協助，維繫香火不斷，殷啟神光朗耀。然慶典活動依舊在馬路上進行，格局侷促，塵土飛揚，既不雅觀，又欠衛生，有失對神尊的虔敬。信眾新興村村長姜林德欽、姜林筆、姜林變、陳德豐、許榮貴等士紳，乃倡議「取正名，建廟堂」，以莊嚴道場，雄振神威，關揚法味，懾服民心。民國五十四年，姜林德欽、陳徳盟、鄉民代表會主席姜天造等人以六萬元，和張銀茂（下營上帝廟土地原承租人）磋商，獲得一百五十坪土地的轉承租權，基地始得，神道紮根。又經智珠在握的美林德欽，姜林都思索寓意，連結神旨，廟名定為「六興堂」。意義是：聖德神功，六合禎祥，宣化興仁，饒益家邦，匡正人心，國泰民安。
+        </p>
+        <p>
+          民國五十六年六月，開始向信眾募集建廟基金，同時委請姜天造先生研訂「六興堂管理委員會」組織章程，健全架構，職掌分明，並向政府申請寺廟登記，以示合法、正統、蔚成信仰、行善、宗教文化活動的重要場所。廟堂肇建，財力物力幾番琢磨，於民國六十四年式落成，並敦請釋傳妙大師撰寫對聯二幅：正門對聯：玄機妙奧手持星劍騰威武天界分靈位鎮北方護庶民橫批：玄冥斗宿天下威尊六上帝神龕對聯：上下雍和祠廟重新崇厥德帝恩浩大香煙鼎盛秉神權
+        </p>
+        <p>
+          堂內供奉的神祇是：玄天六上帝、部將 康元帥、部將 趙元帥、觀音佛祖、觀音二佛祖、黑虎大將軍、軍師伍關大帝
+        </p>
+        <p>
+          廟堂落成，香煙嬝燥，和音悠悠，神光炯炯，喜氣洋洋，盛讚捐資，無畏布施者功德無量。廟堂內設有靈籤、藥籤，相當應驗。典藏「山不在高，有仙則名；水不在深，有龍則靈。」民國八十五年，下營上帝廟開放土地承租者，可以進行買賣交割。管理委員會再募集二百七十萬元，正式取得「六興堂」座落的一百五十坪土地所有權，同時以管理人吳金益身份申請寺廟產權變動登記，完成一切合法手續。民國九十七年八月於廟堂南側，興建符合環保概念的金爐一座。民國一〇一年八月，以姜進忠名義，加入台南市南瀛道教會團體會員。民國一〇一年初，接壤在廟堂正西的八十七坪私人土地，被洪宗瀚先生買走，將築牆建屋，必定朦遮神尊視野，沖煞靈氣；虔誠信眾姜太平得悉，屢有不舒適預兆，靜思感悟神機後，立即邀請委員們共同討論，揣摩神意，咸認斯土，是「六興堂」成為神聖道場必要之寶地，如添購後可補狹隘廟地之不足，一致決議請求洪先生以原購價錢三百一十萬元割愛，洪先生也慈悲的答允，「六興堂」發展的藍圖遂完整的呈現。此地買妥，奇妙地有位陌生住在布袋鎮青年，於今年二月趨車來到「六興堂」題詩贈語，讚譽神威，褒揚善德，勖勉修行，恢宏廟堂。記憶容易消逝，藉此記述，希冀鑑古知今，六興堂信眾，永遠沐浴在神光普照之下，安樂常喜，叩謝神恩，特為誌之。
+        </p>
+        <p>
+          民國一〇一年歲次壬辰年陽月六興堂管理委員會 敬撰
+        </p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -791,17 +940,18 @@ footer {
             <img src="images/website/god_1.jpg" alt="玄天六上帝">
           </div>
           <div class="deity-card-body">
-            <h3>玄天六上帝</h3>
-            <p class="deity-title">主祀神明</p>
-            <p>
-              玄天上帝為道教重要護法神，象徵正氣、鎮煞與守護，廣受民間信奉。六興堂以「六上帝」為特色，代表神威分靈、護佑四方。
-            </p>
-            <p>
-              玄天上帝，又稱「真武大帝」、「北極玄天上帝」、「上帝公」，是道教與民間信仰中極具地位的重要神祇之一。祂主掌北方、水界與降妖伏魔，被視為正義與威嚴的象徵。  
-            </p>
-            <p>
-              玄天上帝象徵北極星，在道教體系中屬於統御北方的重要尊神，亦被尊稱為「黑帝」。
-            </p>
+            <div class="deity-card-top">
+              <div>
+                <h3>玄天六上帝</h3>
+                <p class="deity-title">主祀神明</p>
+              </div>
+              <button class="expand-btn" data-modal-title="玄天六上帝" data-modal-subtitle="主祀神明" data-modal-source="deity-xuantian">詳細 ›</button>
+            </div>
+            <div class="deity-desc" id="deity-xuantian">
+              <p>玄天上帝為道教重要護法神，象徵正氣、鎮煞與守護，廣受民間信奉。六興堂以「六上帝」為特色，代表神威分靈、護佑四方。</p>
+              <p>玄天上帝，又稱「真武大帝」、「北極玄天上帝」、「上帝公」，是道教與民間信仰中極具地位的重要神祇之一。祂主掌北方、水界與降妖伏魔，被視為正義與威嚴的象徵。</p>
+              <p>玄天上帝象徵北極星，在道教體系中屬於統御北方的重要尊神，亦被尊稱為「黑帝」。</p>
+            </div>
           </div>
         </div>
 
@@ -810,19 +960,21 @@ footer {
             <img src="https://placehold.co/600x440/1E0E0E/C9A84C?text=主祀神明" alt="康趙二元帥">
           </div>
           <div class="deity-card-body">
-            <h3>康趙二元帥</h3>
-            <p class="deity-title">主祀神明</p>
-            <p>
-              康趙元帥為道教與民間信仰中的護法神，常作為玄天上帝（帝爺公）的部將，亦是道教「三十六天將」成員。康元帥（康席、康妙威）多為紅面，被封為「仁聖元帥」；趙元帥（趙公明）多為黑面，稱「金輪執法趙元帥」。兩人多站立於帝爺公神龕兩旁，負責守護廟宇、驅除妖孽。 
-            </p>
-            <p>
-              康趙元帥詳細介紹：
-              身份與職責
-              康元帥（康席/康真君/仁聖康元帥）： 相傳為西安黑松林之精怪，後歸順玄天上帝，職掌四方都社令，為東嶽十太保之一。其形象多為紅臉，手持金斧，慈惠降妖。
-              趙元帥（趙公明/趙玄壇/金輪如意執法趙元帥）： 為黑煞神轉世，手持鐵鞭，精通收妖驅雷，亦是著名的財神（武財神）。其職責為直殿大將軍、巡察五方、除瘟禳災。
-              與玄天上帝的關係
-              康、趙元帥是玄天上帝駕前最常見的兩大護法站將（有時亦會加上馬、溫元帥），負責執行巡邏、收妖等任務。
-            </p>
+            <div class="deity-card-top">
+              <div>
+                <h3>康趙二元帥</h3>
+                <p class="deity-title">主祀神明</p>
+              </div>
+              <button class="expand-btn" data-modal-title="康趙二元帥" data-modal-subtitle="主祀神明" data-modal-source="deity-kanzhao">詳細 ›</button>
+            </div>
+            <div class="deity-desc" id="deity-kanzhao">
+              <p>康趙元帥為道教與民間信仰中的護法神，常作為玄天上帝（帝爺公）的部將，亦是道教「三十六天將」成員。康元帥（康席、康妙威）多為紅面，被封為「仁聖元帥」；趙元帥（趙公明）多為黑面，稱「金輪執法趙元帥」。兩人多站立於帝爺公神龕兩旁，負責守護廟宇、驅除妖孽。</p>
+              <p>康趙元帥詳細介紹：
+              身份與職責。
+              康元帥（康席/康真君/仁聖康元帥）：相傳為西安黑松林之精怪，後歸順玄天上帝，職掌四方都社令，為東嶽十太保之一。其形象多為紅臉，手持金斧，慈惠降妖。
+              趙元帥（趙公明/趙玄壇/金輪如意執法趙元帥）：為黑煞神轉世，手持鐵鞭，精通收妖驅雷，亦是著名的財神（武財神）。其職責為直殿大將軍、巡察五方、除瘟禳災。</p>
+              <p>與玄天上帝的關係：康、趙元帥是玄天上帝駕前最常見的兩大護法站將（有時亦會加上馬、溫元帥），負責執行巡邏、收妖等任務。</p>
+            </div>
           </div>
         </div>
       </div>
@@ -836,13 +988,17 @@ footer {
             <img src="images/website/god_2.jpg" alt="觀音佛祖">
           </div>
           <div class="deity-card-body">
-            <h3>觀音佛祖</h3>
-            <p class="deity-title">配祀神明</p>
-            <p>
-              觀音佛祖即 觀世音菩薩，為佛教中大慈大悲的象徵，亦是臺灣民間信仰中極受尊崇的「觀音媽」、「佛祖媽」。相傳為過去佛「正法明如來」倒駕慈航，因慈悲應化、尋聲救苦，廣度眾生，故於民間香火鼎盛、信仰深遠。
-
-              觀音佛祖形象多變，隨緣化現，如送子觀音、魚籃觀音等，皆展現其普渡眾生、隨願應化之慈悲願力。每逢農曆二月十九（聖誕）、六月十九（得道）、九月十九（出家），為重要紀念之日，信眾多前往參香禮拜，祈求平安順遂。
-            </p>
+            <div class="deity-card-top">
+              <div>
+                <h3>觀音佛祖</h3>
+                <p class="deity-title">配祀神明</p>
+              </div>
+              <button class="expand-btn" data-modal-title="觀音佛祖" data-modal-subtitle="配祀神明" data-modal-source="deity-guanyin1">詳細 ›</button>
+            </div>
+            <div class="deity-desc" id="deity-guanyin1">
+              <p>觀音佛祖即觀世音菩薩，為佛教中大慈大悲的象徵，亦是臺灣民間信仰中極受尊崇的「觀音媽」、「佛祖媽」。相傳為過去佛「正法明如來」倒駕慈航，因慈悲應化、尋聲救苦，廣度眾生，故於民間香火鼎盛、信仰深遠。</p>
+              <p>觀音佛祖形象多變，隨緣化現，如送子觀音、魚籃觀音等，皆展現其普渡眾生、隨願應化之慈悲願力。每逢農曆二月十九（聖誕）、六月十九（得道）、九月十九（出家），為重要紀念之日，信眾多前往參香禮拜，祈求平安順遂。</p>
+            </div>
           </div>
         </div>
 
@@ -851,13 +1007,17 @@ footer {
             <img src="images/website/god_3.jpg" alt="觀音二佛祖">
           </div>
           <div class="deity-card-body">
-            <h3>觀音二佛祖</h3>
-            <p class="deity-title">配祀神明</p>
-            <p>
-              觀音佛祖即 觀世音菩薩，為佛教中大慈大悲的象徵，亦是臺灣民間信仰中極受尊崇的「觀音媽」、「佛祖媽」。相傳為過去佛「正法明如來」倒駕慈航，因慈悲應化、尋聲救苦，廣度眾生，故於民間香火鼎盛、信仰深遠。
-
-              觀音佛祖形象多變，隨緣化現，如送子觀音、魚籃觀音等，皆展現其普渡眾生、隨願應化之慈悲願力。每逢農曆二月十九（聖誕）、六月十九（得道）、九月十九（出家），為重要紀念之日，信眾多前往參香禮拜，祈求平安順遂。
-            </p>
+            <div class="deity-card-top">
+              <div>
+                <h3>觀音二佛祖</h3>
+                <p class="deity-title">配祀神明</p>
+              </div>
+              <button class="expand-btn" data-modal-title="觀音二佛祖" data-modal-subtitle="配祀神明" data-modal-source="deity-guanyin2">詳細 ›</button>
+            </div>
+            <div class="deity-desc" id="deity-guanyin2">
+              <p>觀音佛祖即觀世音菩薩，為佛教中大慈大悲的象徵，亦是臺灣民間信仰中極受尊崇的「觀音媽」、「佛祖媽」。相傳為過去佛「正法明如來」倒駕慈航，因慈悲應化、尋聲救苦，廣度眾生，故於民間香火鼎盛、信仰深遠。</p>
+              <p>觀音佛祖形象多變，隨緣化現，如送子觀音、魚籃觀音等，皆展現其普渡眾生、隨願應化之慈悲願力。每逢農曆二月十九（聖誕）、六月十九（得道）、九月十九（出家），為重要紀念之日，信眾多前往參香禮拜，祈求平安順遂。</p>
+            </div>
           </div>
         </div>
 
@@ -866,9 +1026,16 @@ footer {
             <img src="images/website/god_4.jpg" alt="黑虎大將軍">
           </div>
           <div class="deity-card-body">
-            <h3>黑虎大將軍</h3>
-            <p class="deity-title">配祀神明</p>
-            <p>黑虎大將軍"介紹..."</p>
+            <div class="deity-card-top">
+              <div>
+                <h3>黑虎大將軍</h3>
+                <p class="deity-title">配祀神明</p>
+              </div>
+              <button class="expand-btn" data-modal-title="黑虎大將軍" data-modal-subtitle="配祀神明" data-modal-source="deity-blacktiger">詳細 ›</button>
+            </div>
+            <div class="deity-desc" id="deity-blacktiger">
+              <p>黑虎大將軍"介紹..."</p>
+            </div>
           </div>
         </div>
 
@@ -877,9 +1044,16 @@ footer {
             <img src="images/website/god_4.jpg" alt="軍師伍關大帝">
           </div>
           <div class="deity-card-body">
-            <h3>軍師伍關大帝</h3>
-            <p class="deity-title">配祀神明</p>
-            <p>軍師伍關大帝"介紹..."</p>
+            <div class="deity-card-top">
+              <div>
+                <h3>軍師伍關大帝</h3>
+                <p class="deity-title">配祀神明</p>
+              </div>
+              <button class="expand-btn" data-modal-title="軍師伍關大帝" data-modal-subtitle="配祀神明" data-modal-source="deity-wuguan">詳細 ›</button>
+            </div>
+            <div class="deity-desc" id="deity-wuguan">
+              <p>軍師伍關大帝"介紹..."</p>
+            </div>
           </div>
         </div>
       </div>
@@ -1024,6 +1198,20 @@ footer {
 <!-- Lightbox -->
 <div id="lightbox"><img src="" alt=""></div>
 
+<!-- 詳細資訊 Modal -->
+<div id="infoModalOverlay" class="info-modal-overlay">
+  <div class="info-modal-box" id="infoModalBox">
+    <div class="info-modal-header">
+      <div>
+        <h2 id="infoModalTitle"></h2>
+        <p class="info-modal-subtitle" id="infoModalSubtitle"></p>
+      </div>
+      <button class="info-modal-close" id="infoModalClose">✕</button>
+    </div>
+    <div class="info-modal-body" id="infoModalBody"></div>
+  </div>
+</div>
+
 <!-- =========================== JavaScript =========================== -->
 <script>
 // ---- 進場 Logo 淡出 ----
@@ -1056,6 +1244,40 @@ const revealObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.12 });
 reveals.forEach(el => revealObserver.observe(el));
+
+// ---- 詳細資訊 Modal ----
+const infoOverlay = document.getElementById('infoModalOverlay');
+const infoTitle   = document.getElementById('infoModalTitle');
+const infoSub     = document.getElementById('infoModalSubtitle');
+const infoBody    = document.getElementById('infoModalBody');
+const infoClose   = document.getElementById('infoModalClose');
+
+document.querySelectorAll('.expand-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    infoTitle.textContent = btn.dataset.modalTitle || '';
+    const sub = btn.dataset.modalSubtitle || '';
+    infoSub.textContent = sub;
+    infoSub.style.display = sub ? '' : 'none';
+    const src = document.getElementById(btn.dataset.modalSource);
+    infoBody.innerHTML = src ? src.innerHTML : '';
+    infoOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+infoOverlay.addEventListener('click', e => {
+  if (e.target === infoOverlay) closeInfoModal();
+});
+infoClose.addEventListener('click', closeInfoModal);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeInfoModal();
+});
+
+function closeInfoModal() {
+  infoOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
 
 // ---- 相片 Lightbox ----
 const lightbox = document.getElementById('lightbox');
