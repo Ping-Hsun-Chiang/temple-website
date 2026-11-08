@@ -125,10 +125,3 @@ images/website/            宮廟、神明照片與 LOGO
 sitemap.xml                提供搜尋引擎索引
 docs/screenshots/          README 使用的截圖
 ```
-
-## 未來規劃
-
-- 補上康趙二元帥的神像照片，以及首頁沿革中的創建年份
-- 捐款資料寫入 Google Sheets，讓廟方可以對帳並追蹤收據寄送
-- 小幫手在找不到答案時改由 Gemini 回答（以知識庫內容作為依據），並保留本地比對作為免費的第一層
-- `sitemap.xml` 加入線上擲筊頁面
